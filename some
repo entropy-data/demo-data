@@ -1,0 +1,67 @@
+apiVersion: "v1.0.0"
+kind: "DataProduct"
+id: "articles-history"
+name: "Articles history"
+status: "active"
+domain: "web-shop"
+description: {}
+team:
+  name: "products"
+tags:
+- "demo"
+outputPorts:
+- name: "snowflake_articles_history"
+  version: "1"
+  description: "All article snapshots since 2020"
+  type: "snowflake"
+  contractId: "snowflake_articles_history"
+  authoritativeDefinitions:
+  - type: "location"
+    url: "http://link-to-location.example.com"
+  customProperties:
+  - property: "displayName"
+    value: "Articles History Snowflake v1"
+  - property: "platformRole"
+    value: "op_articles_history_snowflake_articles_history_role"
+  - property: "status"
+    value: "active"
+  - property: "autoApprove"
+    value: false
+  - property: "containsPii"
+    value: false
+  - property: "server"
+    value:
+      schema: "ARTICLES_HISTORY"
+      account: "lmtrwxs-xn14859"
+      database: "ARTICLES_DB"
+  tags:
+  - "snowflake"
+  - "demo"
+support:
+- channel: "data-product-articles-history@acme.example.com"
+  url: "mailto:data-product-articles-history@acme.example.com"
+  description: "Contact the Products team for questions about historical snapshots or data retention."
+  tool: "email"
+  scope: "interactive"
+authoritativeDefinitions:
+- type: "semantics"
+  url: "http://localhost:8080/demo386954990206/semantics/main/article"
+customProperties:
+- property: "platformRole"
+  value: "dp_articles_history_role"
+- property: "icon"
+  value: "snowflake"
+- property: "type"
+  value: "source-aligned"
+- property: "riskAssessment"
+  value: "low risk"
+- property: "dataResidency"
+  value: "EU"
+- property: "keywords"
+  value: "articles, product history, snapshots, temporal, time series, product changes, catalog evolution, Snowflake"
+- property: "aiInstructions"
+  value: "Contains historical snapshots of all articles since 2020. Each row is a point-in-time snapshot — there will be multiple rows per article. For current-state queries, use the Articles Latest data product instead. The table is in ARTICLES_DB.ARTICLES_HISTORY."
+- property: "aiExamples"
+  value: |
+    Q: How has the price of a specific article changed over time?
+    SELECT article_id, price, snapshot_date FROM ARTICLES_DB.ARTICLES_HISTORY.ARTICLES WHERE article_id = '12345' ORDER BY snapshot_date;
