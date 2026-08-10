@@ -1,0 +1,68 @@
+apiVersion: "v3.1.0"
+kind: "DataContract"
+id: "snowflake_articles_history"
+name: "Articles History"
+version: "1.0.0"
+status: "active"
+description:
+  purpose: "All article snapshots since 2020"
+  usage: "Max. 10x queries per day"
+  limitations: "Not suitable for real-time use cases"
+team:
+  name: "products"
+  members:
+  - username: "gordie.stuart@demoTHTvoRKjjhGo8CmVLjE3f.datamesh-manager.com"
+    name: "Gordie Stuart"
+    role: "contact"
+price:
+  priceAmount: 1000
+  priceCurrency: "USD"
+  priceUnit: "month"
+customProperties:
+- property: "noticePeriod"
+  value: "P3M"
+servers:
+- server: "snowflake-articles"
+  type: "snowflake"
+  account: "acme-articles"
+  database: "ARTICLES_DB"
+  schema: "HISTORY"
+schema:
+- name: "articles_history"
+  physicalType: "table"
+  businessName: "Articles History"
+  description: "The history of articles."
+  properties:
+  - name: "sku"
+    logicalType: "string"
+    required: true
+    authoritativeDefinitions:
+    - type: "definition"
+      url: "https://demo.entropy-data.com/demo582179416712/definitions/fulfillment/sku"
+  - name: "name"
+    logicalType: "string"
+    physicalType: "text"
+    description: "The name of the article"
+    businessName: "Name"
+  - name: "color"
+    logicalType: "string"
+    physicalType: "text"
+    description: "The color of the article"
+    businessName: "Color"
+  - name: "brand_name"
+    logicalType: "string"
+    physicalType: "text"
+    description: "The brand of the article"
+    businessName: "Brand Name"
+  - name: "timestamp"
+    logicalType: "timestamp"
+    required: true
+    authoritativeDefinitions:
+    - type: "definition"
+      url: "https://demo.entropy-data.com/demo582179416712/definitions/global/actual_timestamp"
+  - name: "processing_timestamp"
+    logicalType: "timestamp"
+    required: true
+    authoritativeDefinitions:
+    - type: "definition"
+      url: "https://demo.entropy-data.com/demo582179416712/definitions/global/processed_timestamp"
