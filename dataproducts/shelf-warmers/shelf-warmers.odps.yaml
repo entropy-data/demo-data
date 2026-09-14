@@ -2,7 +2,7 @@ apiVersion: "v1.1.0"
 kind: "DataProduct"
 id: "shelf-warmers"
 name: "Shelf Warmers"
-status: "draft"
+status: "active"
 type: "aggregate"
 domain: "operations"
 # edited on the git side during the smoke test
