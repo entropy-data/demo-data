@@ -1686,3 +1686,4 @@ ontology:
     name@fr: "Numéro de TVA"
     description@de: "Umsatzsteuer-Identifikationsnummer für Geschäftsrechnungen (EU-VIES-Format)."
     description@fr: "Numéro d'identification à la TVA fourni pour les factures professionnelles (format VIES UE)."
+# reviewer edit on the pull request branch
