@@ -478,4 +478,3 @@ schema:
     - type: "semantics"
       url: "http://localhost:8471/demo602956902395/semantics/global/sku"
 # remote edit for the live check
-# second remote edit, to differ from Entropy Data
