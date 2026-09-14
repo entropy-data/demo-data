@@ -1,0 +1,1611 @@
+version: "0.2.0.dev0"
+name: "global"
+description: |-
+  Core business semantics for the demo retail organization.
+  Shared properties were migrated from the legacy /definitions catalogue.
+custom_properties:
+  display_name: "Global"
+  owner: "governance-group"
+ontology:
+- concept: "Catalog"
+  id: "catalog"
+  type: "GroupType"
+  description: "Products, orderable article variants, and brands offered for sale."
+  iri: "http://www.entropy-data.com/ns/main/Catalog"
+  custom_properties:
+    name@de: "Katalog"
+    name@fr: "Catalogue"
+    description@de: "Produkte, bestellbare Artikelvarianten und Marken, die zum Verkauf angeboten werden."
+    description@fr: "Produits, variantes d'articles commandables et marques proposés à la vente."
+- concept: "Controlling"
+  id: "controlling"
+  type: "GroupType"
+  description: "Financial KPIs and commercial performance metrics."
+  iri: "http://www.entropy-data.com/ns/main/Controlling"
+  custom_properties:
+    name@de: "Controlling"
+    name@fr: "Contrôle de gestion"
+    description@de: "Finanzkennzahlen und kommerzielle Leistungsindikatoren."
+    description@fr: "Indicateurs financiers et mesures de performance commerciale."
+- concept: "Customers"
+  id: "customers"
+  type: "GroupType"
+  description: "People and households the business serves."
+  iri: "http://www.entropy-data.com/ns/main/Customers"
+  custom_properties:
+    name@de: "Kunden"
+    name@fr: "Clients"
+    description@de: "Personen und Haushalte, die das Unternehmen bedient."
+    description@fr: "Personnes et foyers servis par l'entreprise."
+- concept: "Fulfillment"
+  id: "fulfillment"
+  type: "GroupType"
+  description: "Inventory, picking, packing, and shipment of orders."
+  iri: "http://www.entropy-data.com/ns/main/Fulfillment"
+  custom_properties:
+    name@de: "Auftragsabwicklung"
+    name@fr: "Exécution"
+    description@de: "Bestandsverwaltung, Kommissionierung, Verpackung und Versand der Bestellungen."
+    description@fr: "Gestion des stocks, préparation, emballage et expédition des commandes."
+- concept: "Sales"
+  id: "sales"
+  type: "GroupType"
+  description: "Order taking, checkout, and post-sale customer service."
+  iri: "http://www.entropy-data.com/ns/main/Sales"
+  custom_properties:
+    name@de: "Vertrieb"
+    name@fr: "Ventes"
+    description@de: "Bestellannahme, Checkout und Kundenservice nach dem Verkauf."
+    description@fr: "Prise de commande, paiement et service après-vente."
+- concept: "Technical Fields"
+  id: "technical_fields"
+  type: "GroupType"
+  description: "Data pipeline metadata fields common to many tables, such as ingestion and processing timestamps."
+  iri: "http://www.entropy-data.com/ns/main/TechnicalFields"
+  custom_properties:
+    name@de: "Technische Felder"
+    name@fr: "Champs techniques"
+    description@de: "Metadatenfelder der Datenpipeline, die in vielen Tabellen vorkommen, wie z. B. Zeitstempel für Ingestion und Verarbeitung."
+    description@fr: "Champs de métadonnées du pipeline de données communs à de nombreuses tables, tels que les horodatages d'ingestion et de traitement."
+- concept: "Customer Email"
+  id: "customer_email"
+  type: "ValueType"
+  shared: true
+  description: "The email address of a customer."
+  iri: "http://www.entropy-data.com/ns/main/customerEmail"
+  group: "customers"
+  extends:
+  - "String"
+  classification: "Restricted"
+  examples:
+  - "mail@example.com"
+  pattern: "^.*@.*$"
+  custom_properties:
+    name@de: "Kunden-E-Mail"
+    name@fr: "E-mail du client"
+    description@de: "Die E-Mail-Adresse eines Kunden."
+    description@fr: "L'adresse e-mail d'un client."
+- concept: "Customer ID"
+  id: "customer_id"
+  type: "ValueType"
+  shared: true
+  description: "The internal ID of any customer in the online shop. Guest customers have a customer ID as well."
+  iri: "http://www.entropy-data.com/ns/main/customerId"
+  group: "customers"
+  extends:
+  - "String"
+  classification: "Confidential"
+  examples:
+  - "c1-10123123"
+  custom_properties:
+    name@de: "Kunden-ID"
+    name@fr: "ID du client"
+    description@de: "Die interne ID jedes Kunden im Online-Shop. Gastkunden haben ebenfalls eine Kunden-ID."
+    description@fr: "L'identifiant interne de tout client dans la boutique en ligne. Les clients invités ont également un identifiant client."
+- concept: "Last Updated Timestamp"
+  id: "actual_timestamp"
+  type: "ValueType"
+  shared: true
+  description: |-
+    The timestamp at which the underlying source record was last updated.
+    Reflects the business change time as reported by the source system, not when the record was observed or loaded into the data product.
+  iri: "http://www.entropy-data.com/ns/main/actualTimestamp"
+  group: "technical_fields"
+  extends:
+  - "DateTime"
+  classification: "Internal"
+  examples:
+  - "2025-03-14T09:12:47Z"
+  custom_properties:
+    name@de: "Zeitstempel der letzten Aktualisierung"
+    name@fr: "Horodatage de la dernière mise à jour"
+    description@de: |-
+      Der Zeitstempel, zu dem der zugrunde liegende Quelldatensatz zuletzt aktualisiert wurde.
+      Spiegelt die fachliche Änderungszeit des Quellsystems wider, nicht den Zeitpunkt der Beobachtung oder Beladung im Datenprodukt.
+    description@fr: |-
+      L'horodatage auquel l'enregistrement source sous-jacent a été mis à jour pour la dernière fois.
+      Reflète l'heure du changement métier telle que rapportée par le système source, et non le moment où l'enregistrement a été observé ou chargé dans le produit de données.
+- concept: "Order ID"
+  id: "order_id"
+  type: "ValueType"
+  shared: true
+  description: "The user-facing ID that identifies an order in the online shop. Also used for support requests."
+  iri: "http://www.entropy-data.com/ns/main/orderId"
+  group: "sales"
+  extends:
+  - "String"
+  classification: "Confidential"
+  examples:
+  - "100-0314678"
+  custom_properties:
+    name@de: "Bestell-ID"
+    name@fr: "ID de commande"
+    description@de: "Die dem Benutzer angezeigte ID, die eine Bestellung im Online-Shop identifiziert. Wird auch für Support-Anfragen verwendet."
+    description@fr: "L'identifiant visible par l'utilisateur qui identifie une commande dans la boutique en ligne. Également utilisé pour les demandes d'assistance."
+- concept: "Process Timestamp"
+  id: "processed_timestamp"
+  type: "ValueType"
+  shared: true
+  description: |-
+    The timestamp at which the record was processed by the data pipeline.
+    Useful for debugging ingestion lag and reproducing the state of the data product at a given point in time.
+  iri: "http://www.entropy-data.com/ns/main/processedTimestamp"
+  group: "technical_fields"
+  extends:
+  - "DateTime"
+  classification: "Internal"
+  examples:
+  - "2025-03-14T09:15:02Z"
+  custom_properties:
+    name@de: "Verarbeitungszeitstempel"
+    name@fr: "Horodatage de traitement"
+    description@de: |-
+      Der Zeitstempel, zu dem der Datensatz von der Datenpipeline verarbeitet wurde.
+      Nützlich zum Debuggen von Ingestion-Verzögerungen und zur Reproduktion des Zustands des Datenprodukts zu einem bestimmten Zeitpunkt.
+    description@fr: |-
+      L'horodatage auquel l'enregistrement a été traité par le pipeline de données.
+      Utile pour déboguer le délai d'ingestion et reproduire l'état du produit de données à un moment donné.
+- concept: "Shipment ID"
+  id: "shipment_id"
+  type: "ValueType"
+  shared: true
+  description: |-
+    A Shipment ID is an internal unique identifier for a shipment.
+    It is typically associated with a shipment's tracking number.
+  iri: "http://www.entropy-data.com/ns/main/shipmentId"
+  group: "fulfillment"
+  extends:
+  - "String"
+  classification: "Internal"
+  examples:
+  - "123e4567-e89b-12d3-a456-426614174000"
+  custom_properties:
+    name@de: "Versand-ID"
+    name@fr: "ID d'expédition"
+    description@de: |-
+      Eine Versand-ID ist eine interne eindeutige Kennung für eine Sendung.
+      Sie ist typischerweise mit der Tracking-Nummer einer Sendung verknüpft.
+    description@fr: |-
+      Un ID d'expédition est un identifiant interne unique pour une expédition.
+      Il est généralement associé au numéro de suivi d'une expédition.
+- concept: "Stock Keeping Unit"
+  id: "sku"
+  type: "ValueType"
+  shared: true
+  description: |-
+    A Stock Keeping Unit (SKU) is an internal unique identifier for an article.
+    It is typically associated with an article's barcode, such as the EAN/GTIN.
+  iri: "http://www.entropy-data.com/ns/main/sku"
+  group: "catalog"
+  extends:
+  - "String"
+  classification: "Internal"
+  examples:
+  - "AC1212ME1"
+  pattern: "^[A-Za-z0-9]{8,14}$"
+  custom_properties:
+    name@de: "Lagerhaltungseinheit"
+    name@fr: "Unité de gestion de stock"
+    description@de: |-
+      Eine Stock Keeping Unit (SKU) ist eine interne eindeutige Kennung für einen Artikel.
+      Sie ist typischerweise mit dem Barcode eines Artikels verbunden, wie z. B. EAN/GTIN.
+    description@fr: |-
+      Une unité de gestion de stock (SKU) est un identifiant interne unique pour un article.
+      Elle est généralement associée au code-barres d'un article, tel que l'EAN/GTIN.
+- concept: "Article"
+  id: "article"
+  type: "EntityType"
+  description: "A specific orderable variant of a product, identified by its SKU (e.g. a given size and colour combination)."
+  iri: "http://www.entropy-data.com/ns/main/Article"
+  group: "catalog"
+  custom_properties:
+    name@de: "Artikel"
+    name@fr: "Article"
+    description@de: "Eine spezifische bestellbare Variante eines Produkts, identifiziert durch ihre SKU (z. B. eine bestimmte Größen- und Farbkombination)."
+    description@fr: "Une variante spécifique commandable d'un produit, identifiée par son SKU (p. ex. une combinaison donnée de taille et de couleur)."
+  relationships:
+  - id: "article.color"
+    name: "color"
+    roles:
+    - concept: "color"
+    verbalizes:
+    - "{Article} has {color}"
+    type: "hasProperty"
+  - id: "article.gtin"
+    name: "gtin"
+    roles:
+    - concept: "gtin"
+    verbalizes:
+    - "{Article} has {gtin}"
+    type: "hasProperty"
+  - id: "article.list_price"
+    name: "list_price"
+    roles:
+    - concept: "list_price"
+    verbalizes:
+    - "{Article} has {list_price}"
+    type: "hasProperty"
+  - id: "article.size"
+    name: "size"
+    roles:
+    - concept: "size"
+    verbalizes:
+    - "{Article} has {size}"
+    type: "hasProperty"
+  - id: "article.stock_keeping_unit"
+    name: "stock_keeping_unit"
+    roles:
+    - concept: "Stock Keeping Unit"
+    verbalizes:
+    - "{Article} has {Stock Keeping Unit}"
+    type: "hasProperty"
+- concept: "Billing Address"
+  id: "billing_address"
+  type: "EntityType"
+  description: "A postal address used on the invoice for an order. Sub-type of Postal Address."
+  iri: "http://www.entropy-data.com/ns/main/BillingAddress"
+  group: "customers"
+  extends:
+  - "Postal Address"
+  custom_properties:
+    name@de: "Rechnungsadresse"
+    name@fr: "Adresse de facturation"
+    description@de: "Eine Postanschrift, die auf der Rechnung für eine Bestellung verwendet wird. Untertyp von Postal Address."
+    description@fr: "Une adresse postale utilisée sur la facture d'une commande. Sous-type de Postal Address."
+  relationships:
+  - id: "billing_address.company_name"
+    name: "company_name"
+    roles:
+    - concept: "company_name"
+    verbalizes:
+    - "{Billing Address} has {company_name}"
+    type: "hasProperty"
+  - id: "billing_address.vat_id"
+    name: "vat_id"
+    roles:
+    - concept: "vat_id"
+    verbalizes:
+    - "{Billing Address} has {vat_id}"
+    type: "hasProperty"
+- concept: "Customer"
+  id: "customer"
+  type: "EntityType"
+  description: "A natural person who places orders in the online shop."
+  iri: "http://www.entropy-data.com/ns/main/Customer"
+  group: "customers"
+  custom_properties:
+    owl:equivalentClass: "http://schema.org/Person"
+    name@de: "Kunde"
+    name@fr: "Client"
+    description@de: "Eine natürliche Person, die Bestellungen im Online-Shop aufgibt."
+    description@fr: "Une personne physique qui passe des commandes dans la boutique en ligne."
+  relationships:
+  - id: "customer.account_status"
+    name: "account_status"
+    roles:
+    - concept: "account_status"
+    verbalizes:
+    - "{Customer} has {account_status}"
+    type: "hasProperty"
+  - id: "customer.customer_email"
+    name: "customer_email"
+    roles:
+    - concept: "Customer Email"
+    verbalizes:
+    - "{Customer} has {Customer Email}"
+    type: "hasProperty"
+  - id: "customer.customer_id"
+    name: "customer_id"
+    roles:
+    - concept: "Customer ID"
+    verbalizes:
+    - "{Customer} has {Customer ID}"
+    type: "hasProperty"
+  - id: "customer.customer_type"
+    name: "customer_type"
+    roles:
+    - concept: "customer_type"
+    verbalizes:
+    - "{Customer} has {customer_type}"
+    type: "hasProperty"
+  - id: "customer.date_of_birth"
+    name: "date_of_birth"
+    roles:
+    - concept: "date_of_birth"
+    verbalizes:
+    - "{Customer} has {date_of_birth}"
+    type: "hasProperty"
+  - id: "customer.first_name"
+    name: "first_name"
+    roles:
+    - concept: "first_name"
+    verbalizes:
+    - "{Customer} has {first_name}"
+    type: "hasProperty"
+  - id: "customer.gender"
+    name: "gender"
+    roles:
+    - concept: "gender"
+    verbalizes:
+    - "{Customer} has {gender}"
+    type: "hasProperty"
+  - id: "customer.last_login_at"
+    name: "last_login_at"
+    roles:
+    - concept: "last_login_at"
+    verbalizes:
+    - "{Customer} has {last_login_at}"
+    type: "hasProperty"
+  - id: "customer.last_name"
+    name: "last_name"
+    roles:
+    - concept: "last_name"
+    verbalizes:
+    - "{Customer} has {last_name}"
+    type: "hasProperty"
+  - id: "customer.loyalty_points_balance"
+    name: "loyalty_points_balance"
+    roles:
+    - concept: "loyalty_points_balance"
+    verbalizes:
+    - "{Customer} has {loyalty_points_balance}"
+    type: "hasProperty"
+  - id: "customer.loyalty_tier"
+    name: "loyalty_tier"
+    roles:
+    - concept: "loyalty_tier"
+    verbalizes:
+    - "{Customer} has {loyalty_tier}"
+    type: "hasProperty"
+  - id: "customer.marketing_consent"
+    name: "marketing_consent"
+    roles:
+    - concept: "marketing_consent"
+    verbalizes:
+    - "{Customer} has {marketing_consent}"
+    type: "hasProperty"
+  - id: "customer.preferred_language"
+    name: "preferred_language"
+    roles:
+    - concept: "preferred_language"
+    verbalizes:
+    - "{Customer} has {preferred_language}"
+    type: "hasProperty"
+  - id: "customer.registered_at"
+    name: "registered_at"
+    roles:
+    - concept: "registered_at"
+    verbalizes:
+    - "{Customer} has {registered_at}"
+    type: "hasProperty"
+  - id: "customer_places_order"
+    name: "places"
+    description: "A customer places one or more orders."
+    roles:
+    - concept: "Order"
+      role_name: "order"
+    multiplicity: "OneToMany"
+    verbalizes:
+    - "{Customer} places {Order}"
+- concept: "Line Item"
+  id: "line_item"
+  type: "EntityType"
+  description: "A single line within an order, referencing an article and the quantity purchased."
+  iri: "http://www.entropy-data.com/ns/main/LineItem"
+  group: "sales"
+  custom_properties:
+    name@de: "Bestellposition"
+    name@fr: "Ligne de commande"
+    description@de: "Eine einzelne Position innerhalb einer Bestellung, die auf einen Artikel und die gekaufte Menge verweist."
+    description@fr: "Une ligne unique dans une commande, faisant référence à un article et à la quantité achetée."
+  relationships:
+  - id: "line_item.discount_amount"
+    name: "discount_amount"
+    roles:
+    - concept: "discount_amount"
+    verbalizes:
+    - "{Line Item} has {discount_amount}"
+    type: "hasProperty"
+  - id: "line_item.line_number"
+    name: "line_number"
+    roles:
+    - concept: "line_number"
+    verbalizes:
+    - "{Line Item} has {line_number}"
+    type: "hasProperty"
+  - id: "line_item.line_total"
+    name: "line_total"
+    roles:
+    - concept: "line_total"
+    verbalizes:
+    - "{Line Item} has {line_total}"
+    type: "hasProperty"
+  - id: "line_item.order_id"
+    name: "order_id"
+    roles:
+    - concept: "Order ID"
+    verbalizes:
+    - "{Line Item} has {Order ID}"
+    type: "hasProperty"
+  - id: "line_item.quantity"
+    name: "quantity"
+    roles:
+    - concept: "quantity"
+    verbalizes:
+    - "{Line Item} has {quantity}"
+    type: "hasProperty"
+  - id: "line_item.stock_keeping_unit"
+    name: "stock_keeping_unit"
+    roles:
+    - concept: "Stock Keeping Unit"
+    verbalizes:
+    - "{Line Item} has {Stock Keeping Unit}"
+    type: "hasProperty"
+  - id: "line_item.tax_rate"
+    name: "tax_rate"
+    roles:
+    - concept: "tax_rate"
+    verbalizes:
+    - "{Line Item} has {tax_rate}"
+    type: "hasProperty"
+  - id: "line_item.unit_price"
+    name: "unit_price"
+    roles:
+    - concept: "unit_price"
+    verbalizes:
+    - "{Line Item} has {unit_price}"
+    type: "hasProperty"
+  - id: "line_item_references_article"
+    name: "references"
+    description: "A line item references the article that was purchased."
+    roles:
+    - concept: "Article"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Line Item} references {Article}"
+- concept: "Order"
+  id: "order"
+  type: "EntityType"
+  description: "A confirmed purchase placed by a customer in the online shop. A cancelled order keeps its number."
+  iri: "http://www.entropy-data.com/ns/main/Order"
+  group: "sales"
+  ai_context:
+    synonyms:
+    - "orders"
+    - "sales"
+    - "bestellungen"
+  custom_properties:
+    name@de: "Bestellung"
+    name@fr: "Commande"
+    description@de: "Ein bestätigter Kauf, der von einem Kunden im Online-Shop aufgegeben wurde."
+    description@fr: "Un achat confirmé effectué par un client dans la boutique en ligne."
+  relationships:
+  - id: "order.currency"
+    name: "currency"
+    roles:
+    - concept: "currency"
+    verbalizes:
+    - "{Order} has {currency}"
+    type: "hasProperty"
+  - id: "order.customer_id"
+    name: "customer_id"
+    roles:
+    - concept: "Customer ID"
+    verbalizes:
+    - "{Order} has {Customer ID}"
+    type: "hasProperty"
+  - id: "order.order_id"
+    name: "order_id"
+    roles:
+    - concept: "Order ID"
+    verbalizes:
+    - "{Order} has {Order ID}"
+    type: "hasProperty"
+  - id: "order.order_status"
+    name: "order_status"
+    roles:
+    - concept: "order_status"
+    verbalizes:
+    - "{Order} has {order_status}"
+    type: "hasProperty"
+  - id: "order.placed_at"
+    name: "placed_at"
+    roles:
+    - concept: "placed_at"
+    verbalizes:
+    - "{Order} has {placed_at}"
+    type: "hasProperty"
+  - id: "order.total_amount"
+    name: "total_amount"
+    roles:
+    - concept: "total_amount"
+    verbalizes:
+    - "{Order} has {total_amount}"
+    type: "hasProperty"
+  - id: "order_bills_to_billing_address"
+    name: "bills_to"
+    description: "An order is billed to a customer's billing address."
+    roles:
+    - concept: "Billing Address"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Order} billed to {Billing Address}"
+  - id: "order_contains_line_item"
+    name: "contains"
+    description: "An order contains one or more line items."
+    roles:
+    - concept: "Line Item"
+    multiplicity: "OneToMany"
+    verbalizes:
+    - "{Order} contains {Line Item}"
+  - id: "order_fulfilled_by_shipment"
+    name: "fulfilled_by"
+    description: "An order is fulfilled by one or more shipments."
+    roles:
+    - concept: "Shipment"
+    multiplicity: "OneToMany"
+    verbalizes:
+    - "{Order} fulfilled by {Shipment}"
+  - id: "order_ships_to_shipping_address"
+    name: "ships_to"
+    description: "An order specifies the shipping address it should be delivered to."
+    roles:
+    - concept: "Shipping Address"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Order} ships to {Shipping Address}"
+- concept: "Postal Address"
+  id: "postal_address"
+  type: "EntityType"
+  description: "A postal address used for invoicing or delivery."
+  iri: "http://www.entropy-data.com/ns/main/PostalAddress"
+  group: "customers"
+  custom_properties:
+    owl:equivalentClass: "http://schema.org/PostalAddress"
+    name@de: "Adresse"
+    name@fr: "Adresse"
+    description@de: "Eine Postanschrift, die für die Rechnungsstellung oder Lieferung verwendet wird."
+    description@fr: "Une adresse postale utilisée pour la facturation ou la livraison."
+  relationships:
+  - id: "postal_address.city"
+    name: "city"
+    roles:
+    - concept: "city"
+    verbalizes:
+    - "{Postal Address} has {city}"
+    type: "hasProperty"
+  - id: "postal_address.country"
+    name: "country"
+    roles:
+    - concept: "country"
+    verbalizes:
+    - "{Postal Address} has {country}"
+    type: "hasProperty"
+  - id: "postal_address.postal_code"
+    name: "postal_code"
+    roles:
+    - concept: "postal_code"
+    verbalizes:
+    - "{Postal Address} has {postal_code}"
+    type: "hasProperty"
+  - id: "postal_address.street"
+    name: "street"
+    roles:
+    - concept: "street"
+    verbalizes:
+    - "{Postal Address} has {street}"
+    type: "hasProperty"
+- concept: "Product"
+  id: "product"
+  type: "EntityType"
+  description: "An abstract catalog item grouping orderable variants (articles)."
+  iri: "http://www.entropy-data.com/ns/main/Product"
+  group: "catalog"
+  custom_properties:
+    owl:equivalentClass: "http://schema.org/Product"
+    name@de: "Produkt"
+    name@fr: "Produit"
+    description@de: "Ein abstrakter Katalogeintrag, der bestellbare Varianten (Artikel) gruppiert."
+    description@fr: "Un article de catalogue abstrait regroupant les variantes commandables (articles)."
+  relationships:
+  - id: "product.base_list_price"
+    name: "base_list_price"
+    roles:
+    - concept: "base_list_price"
+    verbalizes:
+    - "{Product} has {base_list_price}"
+    type: "hasProperty"
+  - id: "product.brand"
+    name: "brand"
+    roles:
+    - concept: "brand"
+    verbalizes:
+    - "{Product} has {brand}"
+    type: "hasProperty"
+  - id: "product.category"
+    name: "category"
+    roles:
+    - concept: "category"
+    verbalizes:
+    - "{Product} has {category}"
+    type: "hasProperty"
+  - id: "product.description"
+    name: "description"
+    roles:
+    - concept: "description"
+    verbalizes:
+    - "{Product} has {description}"
+    type: "hasProperty"
+  - id: "product.product_id"
+    name: "product_id"
+    roles:
+    - concept: "product_id"
+    verbalizes:
+    - "{Product} has {product_id}"
+    type: "hasProperty"
+  - id: "product.title"
+    name: "title"
+    roles:
+    - concept: "title"
+    verbalizes:
+    - "{Product} has {title}"
+    type: "hasProperty"
+  - id: "product_has_variant_article"
+    name: "has_variant"
+    description: "A product is offered as one or more orderable article variants."
+    roles:
+    - concept: "Article"
+      role_name: "variant"
+    multiplicity: "OneToMany"
+    verbalizes:
+    - "{Product} has variant {Article}"
+- concept: "Shipment"
+  id: "shipment"
+  type: "EntityType"
+  description: "A parcel dispatched to fulfill one or more order items."
+  iri: "http://www.entropy-data.com/ns/main/Shipment"
+  group: "fulfillment"
+  custom_properties:
+    name@de: "Sendung"
+    name@fr: "Expédition"
+    description@de: "Ein Paket, das zur Erfüllung einer oder mehrerer Bestellpositionen versendet wird."
+    description@fr: "Un colis expédié pour exécuter un ou plusieurs articles de commande."
+  relationships:
+  - id: "shipment.carrier"
+    name: "carrier"
+    roles:
+    - concept: "carrier"
+    verbalizes:
+    - "{Shipment} has {carrier}"
+    type: "hasProperty"
+  - id: "shipment.dispatched_at"
+    name: "dispatched_at"
+    roles:
+    - concept: "dispatched_at"
+    verbalizes:
+    - "{Shipment} has {dispatched_at}"
+    type: "hasProperty"
+  - id: "shipment.order_id"
+    name: "order_id"
+    roles:
+    - concept: "Order ID"
+    verbalizes:
+    - "{Shipment} has {Order ID}"
+    type: "hasProperty"
+  - id: "shipment.shipment_id"
+    name: "shipment_id"
+    roles:
+    - concept: "Shipment ID"
+    verbalizes:
+    - "{Shipment} has {Shipment ID}"
+    type: "hasProperty"
+  - id: "shipment.tracking_url"
+    name: "tracking_url"
+    roles:
+    - concept: "tracking_url"
+    verbalizes:
+    - "{Shipment} has {tracking_url}"
+    type: "hasProperty"
+  - id: "shipment_delivers_to_shipping_address"
+    name: "delivers_to"
+    description: "A shipment is delivered to a shipping address."
+    roles:
+    - concept: "Shipping Address"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Shipment} delivered to {Shipping Address}"
+- concept: "Shipping Address"
+  id: "shipping_address"
+  type: "EntityType"
+  description: "A postal address designated as the delivery destination for a shipment. Sub-type of Postal Address."
+  iri: "http://www.entropy-data.com/ns/main/ShippingAddress"
+  group: "customers"
+  extends:
+  - "Postal Address"
+  custom_properties:
+    name@de: "Lieferadresse"
+    name@fr: "Adresse de livraison"
+    description@de: "Eine Postanschrift, die als Lieferziel einer Sendung festgelegt ist. Untertyp von Postal Address."
+    description@fr: "Une adresse postale désignée comme destination de livraison d'une expédition. Sous-type de Postal Address."
+  relationships:
+  - id: "shipping_address.access_code"
+    name: "access_code"
+    roles:
+    - concept: "access_code"
+    verbalizes:
+    - "{Shipping Address} has {access_code}"
+    type: "hasProperty"
+  - id: "shipping_address.delivery_instructions"
+    name: "delivery_instructions"
+    roles:
+    - concept: "delivery_instructions"
+    verbalizes:
+    - "{Shipping Address} has {delivery_instructions}"
+    type: "hasProperty"
+- concept: "Average Order Value"
+  id: "average_order_value"
+  type: "MetricType"
+  description: |-
+    The typical amount a customer spends per order. A core commerce KPI used to
+    gauge pricing, bundling, and cross-sell effectiveness.
+  iri: "http://www.entropy-data.com/ns/main/AverageOrderValue"
+  group: "sales"
+  unit: "EUR"
+  better_when: "higher"
+  formula: "SUM(order.total_amount) / COUNT(DISTINCT order.id)"
+  custom_properties:
+    name@de: "Durchschnittlicher Bestellwert"
+    name@fr: "Valeur moyenne de commande"
+    description@de: "Der typische Betrag, den ein Kunde pro Bestellung ausgibt. Eine zentrale Kennzahl für Preisgestaltung, Bundling und Cross-Selling."
+    description@fr: "Le montant typique qu'un client dépense par commande. Un indicateur clé pour la tarification, le bundling et la vente croisée."
+  relationships:
+  - id: "aov_derived_from_gmv"
+    name: "derived_from"
+    description: "Average Order Value is derived from Gross Merchandise Value (divided by order count)."
+    roles:
+    - concept: "Gross Merchandise Value"
+    verbalizes:
+    - "{Average Order Value} derived from {Gross Merchandise Value}"
+    type: "derived_from"
+  - id: "aov_measures_order"
+    name: "measures"
+    description: "Average Order Value is measured on the Order entity."
+    roles:
+    - concept: "Order"
+    verbalizes:
+    - "{Average Order Value} measures {Order}"
+    type: "measures"
+- concept: "Contribution Margin 1"
+  id: "contribution_margin_1"
+  type: "MetricType"
+  description: |-
+    GMV minus Cost of Goods Sold (COGS). The first step in the contribution-margin
+    ladder. Shows what is left after paying for the products themselves.
+  iri: "http://www.entropy-data.com/ns/main/ContributionMargin1"
+  group: "controlling"
+  unit: "EUR"
+  better_when: "higher"
+  formula: "GMV - COGS"
+  custom_properties:
+    abbreviation: "CM1"
+    name@de: "Deckungsbeitrag 1"
+    name@fr: "Marge de contribution 1"
+    description@de: "Bruttowarenwert abzüglich Wareneinsatz (COGS). Die erste Stufe der Deckungsbeitragsrechnung. Zeigt, was nach den Warenkosten übrig bleibt."
+    description@fr: "Valeur brute des marchandises moins le coût des marchandises vendues (COGS). Première étape de la marge de contribution. Ce qui reste après les coûts produits."
+  relationships:
+  - id: "cm1_derived_from_gmv"
+    name: "derived_from"
+    description: "Contribution Margin 1 is GMV minus Cost of Goods Sold."
+    roles:
+    - concept: "Gross Merchandise Value"
+    verbalizes:
+    - "{Contribution Margin 1} derived from {Gross Merchandise Value}"
+    type: "derived_from"
+  - id: "cm1_measures_order"
+    name: "measures"
+    description: "Contribution Margin 1 is measured per order."
+    roles:
+    - concept: "Order"
+    verbalizes:
+    - "{Contribution Margin 1} measures {Order}"
+    type: "measures"
+- concept: "Contribution Margin 2"
+  id: "contribution_margin_2"
+  type: "MetricType"
+  description: |-
+    CM1 minus variable fulfillment, payment, and marketing costs. Shows the margin
+    left after all directly attributable variable costs of the sale.
+  iri: "http://www.entropy-data.com/ns/main/ContributionMargin2"
+  group: "controlling"
+  unit: "EUR"
+  better_when: "higher"
+  formula: "CM1 - variable_fulfillment_costs - payment_costs - marketing_costs"
+  custom_properties:
+    abbreviation: "CM2"
+    name@de: "Deckungsbeitrag 2"
+    name@fr: "Marge de contribution 2"
+    description@de: "DB1 abzüglich variabler Fulfillment-, Zahlungs- und Marketingkosten. Zeigt die Marge nach allen direkt zurechenbaren variablen Kosten des Verkaufs."
+    description@fr: "MC1 moins les coûts variables de logistique, de paiement et de marketing. Indique la marge après l'ensemble des coûts variables directement imputables à la vente."
+  relationships:
+  - id: "cm2_derived_from_cm1"
+    name: "derived_from"
+    description: "Contribution Margin 2 is CM1 minus variable fulfillment, payment, and marketing costs."
+    roles:
+    - concept: "Contribution Margin 1"
+    verbalizes:
+    - "{Contribution Margin 2} derived from {Contribution Margin 1}"
+    type: "derived_from"
+  - id: "cm2_measures_order"
+    name: "measures"
+    description: "Contribution Margin 2 is measured per order."
+    roles:
+    - concept: "Order"
+    verbalizes:
+    - "{Contribution Margin 2} measures {Order}"
+    type: "measures"
+- concept: "Contribution Margin 3"
+  id: "contribution_margin_3"
+  type: "MetricType"
+  description: |-
+    CM2 minus the impact of returns (refunded revenue and return-handling costs).
+    The most realistic view of per-order profitability for ecommerce businesses.
+  iri: "http://www.entropy-data.com/ns/main/ContributionMargin3"
+  group: "controlling"
+  unit: "EUR"
+  better_when: "higher"
+  formula: "CM2 - refunded_revenue - return_handling_costs"
+  custom_properties:
+    abbreviation: "CM3"
+    name@de: "Deckungsbeitrag 3"
+    name@fr: "Marge de contribution 3"
+    description@de: "DB2 abzüglich der Auswirkungen von Retouren (erstattete Umsätze und Retourenabwicklungskosten). Die realistischste Sicht auf die Profitabilität je Bestellung im E-Commerce."
+    description@fr: "MC2 moins l'impact des retours (chiffre d'affaires remboursé et coûts de traitement des retours). La vision la plus réaliste de la rentabilité par commande en e-commerce."
+  relationships:
+  - id: "cm3_derived_from_cm2"
+    name: "derived_from"
+    description: "Contribution Margin 3 is CM2 minus the impact of returns."
+    roles:
+    - concept: "Contribution Margin 2"
+    verbalizes:
+    - "{Contribution Margin 3} derived from {Contribution Margin 2}"
+    type: "derived_from"
+  - id: "cm3_measures_order"
+    name: "measures"
+    description: "Contribution Margin 3 is measured per order."
+    roles:
+    - concept: "Order"
+    verbalizes:
+    - "{Contribution Margin 3} measures {Order}"
+    type: "measures"
+- concept: "Conversion Rate"
+  id: "conversion_rate"
+  type: "MetricType"
+  description: |-
+    Share of website sessions that result in a completed order. The headline
+    funnel KPI for ecommerce. Higher is better.
+  iri: "http://www.entropy-data.com/ns/main/ConversionRate"
+  group: "sales"
+  unit: "%"
+  better_when: "higher"
+  formula: "COUNT(order) / COUNT(session) * 100"
+  custom_properties:
+    name@de: "Konversionsrate"
+    name@fr: "Taux de conversion"
+    description@de: "Anteil der Website-Sitzungen, die zu einer abgeschlossenen Bestellung führen. Die zentrale Funnel-Kennzahl im E-Commerce. Je höher, desto besser."
+    description@fr: "Part des sessions du site qui aboutissent à une commande finalisée. L'indicateur clé du tunnel de conversion e-commerce. Plus c'est haut, mieux c'est."
+  relationships:
+  - id: "conversion_rate_measures_order"
+    name: "measures"
+    description: "Conversion Rate is measured against placed orders as the desired outcome."
+    roles:
+    - concept: "Order"
+    verbalizes:
+    - "{Conversion Rate} measures {Order}"
+    type: "measures"
+- concept: "Gross Merchandise Value"
+  id: "gmv"
+  type: "MetricType"
+  description: |-
+    Total value of all placed orders before refunds, returns, and discounts.
+    The headline ecommerce KPI, commonly abbreviated as GMV.
+  iri: "http://www.entropy-data.com/ns/main/GrossMerchandiseValue"
+  group: "controlling"
+  unit: "EUR"
+  better_when: "higher"
+  formula: "SUM(order.total_amount)"
+  custom_properties:
+    abbreviation: "GMV"
+    name@de: "Bruttowarenwert"
+    name@fr: "Valeur brute des marchandises"
+    description@de: "Gesamtwert aller aufgegebenen Bestellungen vor Rückerstattungen, Retouren und Rabatten. Die zentrale E-Commerce-Kennzahl, oft als GMV abgekürzt."
+    description@fr: "Valeur totale de toutes les commandes passées avant remboursements, retours et remises. L'indicateur clé de l'e-commerce, souvent abrégé GMV."
+  relationships:
+  - id: "gmv_measures_order_total"
+    name: "measures"
+    description: "Gross Merchandise Value is the aggregation of the order's total amount."
+    roles:
+    - concept: "total_amount"
+    verbalizes:
+    - "{Gross Merchandise Value} measures {total_amount}"
+    type: "measures"
+- concept: "No-Find Rate"
+  id: "no_find_rate"
+  type: "MetricType"
+  description: |-
+    Share of warehouse pick tasks where the picker could not locate the item at
+    its expected storage location (out of stock, misplaced, damaged). A core
+    warehouse-quality KPI. Lower is better.
+  iri: "http://www.entropy-data.com/ns/main/NoFindRate"
+  group: "fulfillment"
+  unit: "%"
+  better_when: "lower"
+  formula: "COUNT(pick_task WHERE status = 'not_found') / COUNT(pick_task) * 100"
+  custom_properties:
+    name@de: "Nichtauffindungsquote"
+    name@fr: "Taux d'introuvables"
+    description@de: "Anteil der Kommissionier-Vorgänge im Lager, bei denen der Artikel am erwarteten Lagerplatz nicht gefunden werden konnte (vergriffen, falsch eingelagert, beschädigt). Eine zentrale Kennzahl für die Lagerqualität. Je niedriger, desto besser."
+    description@fr: "Part des opérations de picking en entrepôt où l'article n'a pas pu être trouvé à son emplacement prévu (rupture, mal rangé, endommagé). Un indicateur clé de la qualité d'entrepôt. Plus c'est bas, mieux c'est."
+  relationships:
+  - id: "no_find_rate_measures_line_item"
+    name: "measures"
+    description: "No-Find Rate is measured per warehouse pick task (one per line item)."
+    roles:
+    - concept: "Line Item"
+    verbalizes:
+    - "{No-Find Rate} measures {Line Item}"
+    type: "measures"
+- concept: "Order Fulfillment Time"
+  id: "order_fulfillment_time"
+  type: "MetricType"
+  description: |-
+    Average time between an order being placed and the first shipment leaving the
+    warehouse. A core fulfillment KPI. Lower is better.
+  iri: "http://www.entropy-data.com/ns/main/OrderFulfillmentTime"
+  group: "fulfillment"
+  unit: "hours"
+  better_when: "lower"
+  formula: "AVG(shipment.dispatched_at - order.placed_at)"
+  custom_properties:
+    name@de: "Auftragsabwicklungszeit"
+    name@fr: "Délai d'exécution des commandes"
+    description@de: "Durchschnittliche Zeit zwischen Bestelleingang und Versand aus dem Lager. Eine zentrale Kennzahl für die Auftragsabwicklung. Je niedriger, desto besser."
+    description@fr: "Temps moyen entre la passation d'une commande et l'expédition depuis l'entrepôt. Un indicateur clé de l'exécution. Plus c'est bas, mieux c'est."
+  relationships:
+  - id: "fulfillment_time_measures_shipment"
+    name: "measures"
+    description: "Order Fulfillment Time is measured on the Shipment entity."
+    roles:
+    - concept: "Shipment"
+    verbalizes:
+    - "{Order Fulfillment Time} measures {Shipment}"
+    type: "measures"
+- concept: "access_code"
+  id: "shipping_address.access-code"
+  type: "ValueType"
+  description: "Optional building or gate access code required for delivery."
+  extends:
+  - "String"
+  classification: "Restricted"
+  examples:
+  - "4711#"
+  custom_properties:
+    name@de: "Zugangscode"
+    name@fr: "Code d'accès"
+    description@de: "Optionaler Gebäude- oder Torzugangscode, der für die Lieferung erforderlich ist."
+    description@fr: "Code d'accès au bâtiment ou au portail requis pour la livraison (optionnel)."
+- concept: "account_status"
+  id: "customer.account-status"
+  type: "ValueType"
+  description: "Lifecycle state of the customer account."
+  extends:
+  - "String"
+  examples:
+  - "active"
+  enum:
+  - "active"
+  - "inactive"
+  - "suspended"
+  - "closed"
+  custom_properties:
+    name@de: "Kontostatus"
+    name@fr: "Statut du compte"
+    description@de: "Lebenszyklusstatus des Kundenkontos."
+    description@fr: "État du cycle de vie du compte client."
+- concept: "base_list_price"
+  id: "product.base-list-price"
+  type: "ValueType"
+  description: "Reference list price for the product before variant-specific adjustments."
+  extends:
+  - "Decimal"
+  examples:
+  - "24.99"
+  custom_properties:
+    name@de: "Basislistenpreis"
+    name@fr: "Prix catalogue de base"
+    description@de: "Referenzlistenpreis für das Produkt vor variantenspezifischen Anpassungen."
+    description@fr: "Prix catalogue de référence pour le produit avant ajustements spécifiques à la variante."
+- concept: "brand"
+  id: "product.brand"
+  type: "ValueType"
+  description: "Brand the product belongs to."
+  extends:
+  - "String"
+  examples:
+  - "EcoWear"
+  custom_properties:
+    name@de: "Marke"
+    name@fr: "Marque"
+    description@de: "Marke, zu der das Produkt gehört."
+    description@fr: "Marque à laquelle appartient le produit."
+- concept: "carrier"
+  id: "shipment.carrier"
+  type: "ValueType"
+  description: "Logistics provider handling the shipment."
+  extends:
+  - "String"
+  examples:
+  - "DHL"
+  - "UPS"
+  - "FedEx"
+  custom_properties:
+    name@de: "Versanddienstleister"
+    name@fr: "Transporteur"
+    description@de: "Logistikdienstleister, der die Sendung abwickelt."
+    description@fr: "Prestataire logistique en charge de l'expédition."
+- concept: "category"
+  id: "product.category"
+  type: "ValueType"
+  description: "Merchandising category the product is filed under."
+  extends:
+  - "String"
+  examples:
+  - "Apparel/T-Shirts"
+  - "Home/Kitchen"
+  custom_properties:
+    name@de: "Kategorie"
+    name@fr: "Catégorie"
+    description@de: "Merchandising-Kategorie, unter der das Produkt eingeordnet ist."
+    description@fr: "Catégorie de merchandising sous laquelle le produit est classé."
+- concept: "city"
+  id: "postal_address.city"
+  type: "ValueType"
+  extends:
+  - "String"
+  examples:
+  - "München"
+  custom_properties:
+    name@de: "Stadt"
+    name@fr: "Ville"
+- concept: "color"
+  id: "article.color"
+  type: "ValueType"
+  description: "Colour variant as shown on the storefront."
+  extends:
+  - "String"
+  examples:
+  - "red"
+  - "navy"
+  - "off-white"
+  custom_properties:
+    name@de: "Farbe"
+    name@fr: "Couleur"
+    description@de: "Farbvariante, wie auf der Storefront angezeigt."
+    description@fr: "Variante de couleur telle qu'affichée sur la boutique."
+- concept: "company_name"
+  id: "billing_address.company-name"
+  type: "ValueType"
+  description: "Legal company name appearing on the invoice for B2B customers."
+  extends:
+  - "String"
+  classification: "Restricted"
+  examples:
+  - "Acme GmbH"
+  custom_properties:
+    name@de: "Firmenname"
+    name@fr: "Raison sociale"
+    description@de: "Rechtlicher Firmenname, der auf der Rechnung für B2B-Kunden erscheint."
+    description@fr: "Raison sociale apparaissant sur la facture pour les clients B2B."
+- concept: "country"
+  id: "postal_address.country"
+  type: "ValueType"
+  description: "ISO 3166-1 alpha-2 country code."
+  extends:
+  - "String"
+  examples:
+  - "DE"
+  - "FR"
+  pattern: "^[A-Z]{2}$"
+  custom_properties:
+    name@de: "Land"
+    name@fr: "Pays"
+    description@de: "ISO 3166-1 alpha-2 Ländercode."
+    description@fr: "Code pays ISO 3166-1 alpha-2."
+- concept: "currency"
+  id: "order.currency"
+  type: "ValueType"
+  description: "ISO 4217 currency code of the order total."
+  extends:
+  - "String"
+  examples:
+  - "EUR"
+  - "USD"
+  pattern: "^[A-Z]{3}$"
+  custom_properties:
+    name@de: "Währung"
+    name@fr: "Devise"
+    description@de: "ISO 4217 Währungscode der Bestellsumme."
+    description@fr: "Code de devise ISO 4217 du total de la commande."
+- concept: "customer_type"
+  id: "customer.customer-type"
+  type: "ValueType"
+  description: "Whether the order was placed as a guest checkout or by a registered customer."
+  extends:
+  - "String"
+  examples:
+  - "registered"
+  enum:
+  - "guest"
+  - "registered"
+  custom_properties:
+    name@de: "Kundentyp"
+    name@fr: "Type de client"
+    description@de: "Ob die Bestellung als Gastbestellung oder durch einen registrierten Kunden aufgegeben wurde."
+    description@fr: "Indique si la commande a été passée en tant qu'invité ou par un client enregistré."
+- concept: "date_of_birth"
+  id: "customer.date-of-birth"
+  type: "ValueType"
+  description: "The customer's date of birth. Used for age verification on restricted articles."
+  extends:
+  - "Date"
+  classification: "Restricted"
+  examples:
+  - "1987-05-14"
+  custom_properties:
+    name@de: "Geburtsdatum"
+    name@fr: "Date de naissance"
+    description@de: "Das Geburtsdatum des Kunden. Wird zur Altersverifizierung bei altersbeschränkten Artikeln verwendet."
+    description@fr: "La date de naissance du client. Utilisée pour la vérification de l'âge sur les articles à restriction d'âge."
+- concept: "delivery_instructions"
+  id: "shipping_address.delivery-instructions"
+  type: "ValueType"
+  description: "Free-text notes for the carrier (e.g. \"leave with neighbour\")."
+  extends:
+  - "String"
+  classification: "Restricted"
+  examples:
+  - "Leave with neighbour at no. 12"
+  custom_properties:
+    name@de: "Lieferhinweise"
+    name@fr: "Instructions de livraison"
+    description@de: "Freitext-Hinweise für den Versanddienstleister (z. B. \"Bei Nachbarn abgeben\")."
+    description@fr: "Notes en texte libre pour le transporteur (p. ex. « laisser chez le voisin »)."
+- concept: "description"
+  id: "product.description"
+  type: "ValueType"
+  description: "Long-form marketing description shown on the product detail page."
+  extends:
+  - "String"
+  examples:
+  - "Soft, breathable 100% organic cotton tee with a relaxed fit."
+  custom_properties:
+    name@de: "Beschreibung"
+    name@fr: "Description"
+    description@de: "Lange Marketingbeschreibung, die auf der Produktdetailseite angezeigt wird."
+    description@fr: "Description marketing longue affichée sur la page de détail du produit."
+- concept: "discount_amount"
+  id: "line_item.discount-amount"
+  type: "ValueType"
+  description: "Absolute discount applied to this line, in the order currency."
+  extends:
+  - "Decimal"
+  examples:
+  - "5.00"
+  custom_properties:
+    name@de: "Rabattbetrag"
+    name@fr: "Montant de la remise"
+    description@de: "Absoluter Rabatt, der auf diese Position angewendet wird, in der Bestellwährung."
+    description@fr: "Remise absolue appliquée à cette ligne, dans la devise de la commande."
+- concept: "dispatched_at"
+  id: "shipment.dispatched-at"
+  type: "ValueType"
+  description: "The timestamp when the shipment was handed over to the carrier."
+  extends:
+  - "DateTime"
+  examples:
+  - "2023-11-23T11:00:33Z"
+  custom_properties:
+    name@de: "Versandzeitpunkt"
+    name@fr: "Date d'expédition"
+    description@de: "Der Zeitstempel, zu dem die Sendung an den Versanddienstleister übergeben wurde."
+    description@fr: "L'horodatage auquel l'expédition a été remise au transporteur."
+- concept: "first_name"
+  id: "customer.first-name"
+  type: "ValueType"
+  description: "Given name as provided at registration."
+  extends:
+  - "String"
+  classification: "Restricted"
+  examples:
+  - "Anna"
+  - "John"
+  custom_properties:
+    name@de: "Vorname"
+    name@fr: "Prénom"
+    description@de: "Vorname, wie bei der Registrierung angegeben."
+    description@fr: "Prénom fourni lors de l'enregistrement."
+- concept: "gender"
+  id: "customer.gender"
+  type: "ValueType"
+  description: "Self-declared gender. Optional at registration."
+  extends:
+  - "String"
+  classification: "Restricted"
+  examples:
+  - "female"
+  enum:
+  - "female"
+  - "male"
+  - "diverse"
+  - "undisclosed"
+  custom_properties:
+    name@de: "Geschlecht"
+    name@fr: "Genre"
+    description@de: "Selbstangegebenes Geschlecht. Optional bei der Registrierung."
+    description@fr: "Genre auto-déclaré. Facultatif lors de l'enregistrement."
+- concept: "gtin"
+  id: "article.gtin"
+  type: "ValueType"
+  description: "Global Trade Item Number (EAN/UPC) encoded on the article's barcode."
+  extends:
+  - "String"
+  examples:
+  - "4006381333931"
+  pattern: "^[0-9]{8,14}$"
+  custom_properties:
+    name@de: "GTIN"
+    name@fr: "GTIN"
+    description@de: "Global Trade Item Number (EAN/UPC), die auf dem Barcode des Artikels codiert ist."
+    description@fr: "Global Trade Item Number (EAN/UPC) encodée sur le code-barres de l'article."
+- concept: "last_login_at"
+  id: "customer.last-login-at"
+  type: "ValueType"
+  description: "Timestamp of the customer's most recent authenticated session."
+  extends:
+  - "DateTime"
+  classification: "Internal"
+  examples:
+  - "2024-09-12T18:42:07Z"
+  custom_properties:
+    name@de: "Letzte Anmeldung"
+    name@fr: "Dernière connexion"
+    description@de: "Zeitstempel der letzten authentifizierten Sitzung des Kunden."
+    description@fr: "Horodatage de la dernière session authentifiée du client."
+- concept: "last_name"
+  id: "customer.last-name"
+  type: "ValueType"
+  description: "Family name as provided at registration."
+  extends:
+  - "String"
+  classification: "Restricted"
+  examples:
+  - "Schmidt"
+  - "Doe"
+  custom_properties:
+    name@de: "Nachname"
+    name@fr: "Nom"
+    description@de: "Nachname, wie bei der Registrierung angegeben."
+    description@fr: "Nom de famille fourni lors de l'enregistrement."
+- concept: "line_number"
+  id: "line_item.line-number"
+  type: "ValueType"
+  description: "Position of the line item within the order, starting at 1."
+  extends:
+  - "Integer"
+  examples:
+  - "1"
+  - "2"
+  custom_properties:
+    name@de: "Positionsnummer"
+    name@fr: "Numéro de ligne"
+    description@de: "Position der Bestellposition innerhalb der Bestellung, beginnend bei 1."
+    description@fr: "Position de la ligne de commande dans la commande, à partir de 1."
+- concept: "line_total"
+  id: "line_item.line-total"
+  type: "ValueType"
+  description: "Net total for this line after discount, excluding shipping (quantity * unit_price - discount_amount)."
+  extends:
+  - "Decimal"
+  examples:
+  - "54.98"
+  custom_properties:
+    name@de: "Positionssumme"
+    name@fr: "Total de la ligne"
+    description@de: "Nettosumme dieser Position nach Rabatt, ohne Versand (Menge × Einzelpreis − Rabatt)."
+    description@fr: "Total net de cette ligne après remise, hors frais de port (quantité × prix unitaire − remise)."
+- concept: "list_price"
+  id: "article.list-price"
+  type: "ValueType"
+  description: "Variant-specific list price before discounts."
+  extends:
+  - "Decimal"
+  examples:
+  - "26.99"
+  custom_properties:
+    name@de: "Listenpreis"
+    name@fr: "Prix catalogue"
+    description@de: "Variantenspezifischer Listenpreis vor Rabatten."
+    description@fr: "Prix catalogue spécifique à la variante avant remises."
+- concept: "loyalty_points_balance"
+  id: "customer.loyalty-points-balance"
+  type: "ValueType"
+  description: "Current redeemable loyalty points balance."
+  extends:
+  - "Integer"
+  classification: "Internal"
+  examples:
+  - "1250"
+  custom_properties:
+    name@de: "Treuepunkte-Saldo"
+    name@fr: "Solde de points de fidélité"
+    description@de: "Aktuelles einlösbares Treuepunkte-Guthaben."
+    description@fr: "Solde actuel de points de fidélité échangeables."
+- concept: "loyalty_tier"
+  id: "customer.loyalty-tier"
+  type: "ValueType"
+  description: "Loyalty program segment assigned based on rolling 12-month spend."
+  extends:
+  - "String"
+  classification: "Internal"
+  examples:
+  - "gold"
+  enum:
+  - "none"
+  - "bronze"
+  - "silver"
+  - "gold"
+  - "platinum"
+  custom_properties:
+    name@de: "Treuestufe"
+    name@fr: "Niveau de fidélité"
+    description@de: "Segment des Treueprogramms, basierend auf den Ausgaben der rollierenden letzten 12 Monate."
+    description@fr: "Segment du programme de fidélité attribué en fonction des dépenses sur 12 mois glissants."
+- concept: "marketing_consent"
+  id: "customer.marketing-consent"
+  type: "ValueType"
+  description: "Whether the customer has opted in to marketing communications (GDPR Art. 6(1)(a))."
+  extends:
+  - "Boolean"
+  classification: "Restricted"
+  examples:
+  - "true"
+  custom_properties:
+    name@de: "Marketing-Einwilligung"
+    name@fr: "Consentement marketing"
+    description@de: "Ob der Kunde Marketingkommunikation zugestimmt hat (DSGVO Art. 6 Abs. 1 lit. a)."
+    description@fr: "Indique si le client a consenti aux communications marketing (RGPD Art. 6(1)(a))."
+- concept: "order_status"
+  id: "order.order-status"
+  type: "ValueType"
+  description: "Lifecycle state of the order."
+  extends:
+  - "String"
+  examples:
+  - "delivered"
+  enum:
+  - "pending"
+  - "confirmed"
+  - "shipped"
+  - "delivered"
+  - "cancelled"
+  - "returned"
+  custom_properties:
+    name@de: "Bestellstatus"
+    name@fr: "Statut de la commande"
+    description@de: "Lebenszyklusstatus der Bestellung."
+    description@fr: "État du cycle de vie de la commande."
+- concept: "placed_at"
+  id: "order.placed-at"
+  type: "ValueType"
+  description: "The timestamp when the order was placed."
+  extends:
+  - "DateTime"
+  examples:
+  - "2023-11-23T11:00:33Z"
+  custom_properties:
+    name@de: "Bestellzeitpunkt"
+    name@fr: "Date de commande"
+    description@de: "Der Zeitstempel, zu dem die Bestellung aufgegeben wurde."
+    description@fr: "L'horodatage auquel la commande a été passée."
+- concept: "postal_code"
+  id: "postal_address.postal_code"
+  type: "ValueType"
+  extends:
+  - "String"
+  classification: "Restricted"
+  examples:
+  - "80331"
+  custom_properties:
+    name@de: "Postleitzahl"
+    name@fr: "Code postal"
+- concept: "preferred_language"
+  id: "customer.preferred-language"
+  type: "ValueType"
+  description: "IETF BCP 47 language tag used for communications and storefront localization."
+  extends:
+  - "String"
+  examples:
+  - "en-US"
+  - "de-DE"
+  pattern: "^[a-z]{2}(-[A-Z]{2})?$"
+  custom_properties:
+    name@de: "Bevorzugte Sprache"
+    name@fr: "Langue préférée"
+    description@de: "IETF BCP 47 Sprachkennzeichen für Kommunikation und Storefront-Lokalisierung."
+    description@fr: "Étiquette de langue IETF BCP 47 utilisée pour les communications et la localisation de la boutique."
+- concept: "product_id"
+  id: "product.product-id"
+  type: "ValueType"
+  description: "Internal unique identifier for the catalog product."
+  extends:
+  - "String"
+  classification: "Internal"
+  examples:
+  - "P-10042"
+  custom_properties:
+    name@de: "Produkt-ID"
+    name@fr: "ID du produit"
+    description@de: "Interne eindeutige Kennung für das Katalogprodukt."
+    description@fr: "Identifiant interne unique du produit catalogue."
+- concept: "quantity"
+  id: "line_item.quantity"
+  type: "ValueType"
+  description: "Number of units of the article purchased in this line."
+  extends:
+  - "Integer"
+  examples:
+  - "2"
+  custom_properties:
+    name@de: "Menge"
+    name@fr: "Quantité"
+    description@de: "Anzahl der in dieser Position gekauften Einheiten des Artikels."
+    description@fr: "Nombre d'unités de l'article achetées sur cette ligne."
+- concept: "registered_at"
+  id: "customer.registered-at"
+  type: "ValueType"
+  description: "Timestamp when the customer account was created."
+  extends:
+  - "DateTime"
+  examples:
+  - "2022-03-17T09:21:44Z"
+  custom_properties:
+    name@de: "Registrierungsdatum"
+    name@fr: "Date d'enregistrement"
+    description@de: "Zeitstempel, zu dem das Kundenkonto erstellt wurde."
+    description@fr: "Horodatage de création du compte client."
+- concept: "size"
+  id: "article.size"
+  type: "ValueType"
+  description: "Size variant, using the sizing system appropriate to the product category."
+  extends:
+  - "String"
+  examples:
+  - "S"
+  - "M"
+  - "L"
+  - "42"
+  custom_properties:
+    name@de: "Größe"
+    name@fr: "Taille"
+    description@de: "Größenvariante unter Verwendung des für die Produktkategorie passenden Größensystems."
+    description@fr: "Variante de taille, utilisant le système de tailles adapté à la catégorie de produit."
+- concept: "street"
+  id: "postal_address.street"
+  type: "ValueType"
+  extends:
+  - "String"
+  classification: "Restricted"
+  examples:
+  - "Marienplatz 8"
+  custom_properties:
+    name@de: "Straße"
+    name@fr: "Rue"
+- concept: "tax_rate"
+  id: "line_item.tax-rate"
+  type: "ValueType"
+  description: "Applicable VAT/sales tax rate as a decimal fraction (e.g. 0.19 for 19%)."
+  extends:
+  - "Decimal"
+  examples:
+  - "0.19"
+  custom_properties:
+    name@de: "Steuersatz"
+    name@fr: "Taux de TVA"
+    description@de: "Geltender Umsatzsteuersatz als Dezimalbruch (z. B. 0,19 für 19 %)."
+    description@fr: "Taux de TVA applicable sous forme de fraction décimale (p. ex. 0,19 pour 19 %)."
+- concept: "title"
+  id: "product.title"
+  type: "ValueType"
+  description: "Display name of the product."
+  extends:
+  - "String"
+  examples:
+  - "Organic Cotton T-Shirt"
+  custom_properties:
+    name@de: "Titel"
+    name@fr: "Titre"
+    description@de: "Anzeigename des Produkts."
+    description@fr: "Nom d'affichage du produit."
+- concept: "total_amount"
+  id: "order.total-amount"
+  type: "ValueType"
+  description: "Order total in the customer's transaction currency, net of VAT."
+  extends:
+  - "Decimal"
+  examples:
+  - "149.90"
+  custom_properties:
+    name@de: "Gesamtbetrag"
+    name@fr: "Montant total"
+    description@de: "Bestellsumme in der Transaktionswährung des Kunden."
+    description@fr: "Total de la commande dans la devise de transaction du client."
+- concept: "tracking_url"
+  id: "shipment.tracking-url"
+  type: "ValueType"
+  description: "Public tracking link provided by the carrier."
+  extends:
+  - "String"
+  examples:
+  - "https://track.dhl.com/?tracking-id=00340434292135100186"
+  custom_properties:
+    name@de: "Tracking-URL"
+    name@fr: "URL de suivi"
+    description@de: "Öffentlicher Tracking-Link, der vom Versanddienstleister bereitgestellt wird."
+    description@fr: "Lien de suivi public fourni par le transporteur."
+- concept: "unit_price"
+  id: "line_item.unit-price"
+  type: "ValueType"
+  description: "Price per unit at the time of purchase, in the order currency."
+  extends:
+  - "Decimal"
+  examples:
+  - "29.99"
+  custom_properties:
+    name@de: "Einzelpreis"
+    name@fr: "Prix unitaire"
+    description@de: "Preis pro Einheit zum Zeitpunkt des Kaufs, in der Bestellwährung."
+    description@fr: "Prix par unité au moment de l'achat, dans la devise de la commande."
+- concept: "vat_id"
+  id: "billing_address.vat-id"
+  type: "ValueType"
+  description: "VAT identification number provided for business invoices (EU VIES format)."
+  extends:
+  - "String"
+  classification: "Restricted"
+  examples:
+  - "DE123456789"
+  pattern: "^[A-Z]{2}[A-Z0-9]{2,12}$"
+  custom_properties:
+    name@de: "Umsatzsteuer-ID"
+    name@fr: "Numéro de TVA"
+    description@de: "Umsatzsteuer-Identifikationsnummer für Geschäftsrechnungen (EU-VIES-Format)."
+    description@fr: "Numéro d'identification à la TVA fourni pour les factures professionnelles (format VIES UE)."
