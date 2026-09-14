@@ -290,14 +290,14 @@ ontology:
 - concept: "Customer"
   id: "customer"
   type: "EntityType"
-  description: "A natural person or household that places orders in the online shop. A customer may hold at most one active subscription."
+  description: "A natural person who places orders in the online shop."
   iri: "http://www.entropy-data.com/ns/main/Customer"
   group: "customers"
   custom_properties:
     owl:equivalentClass: "http://schema.org/Person"
     name@de: "Kunde"
     name@fr: "Client"
-    description@de: "Eine natürliche Person oder ein Haushalt, die Bestellungen im Online-Shop aufgeben. Ein Kunde kann höchstens ein aktives Abonnement halten."
+    description@de: "Eine natürliche Person, die Bestellungen im Online-Shop aufgibt."
     description@fr: "Une personne physique qui passe des commandes dans la boutique en ligne."
   relationships:
   - id: "customer.account_status"
@@ -397,13 +397,6 @@ ontology:
     - concept: "registered_at"
     verbalizes:
     - "{Customer} has {registered_at}"
-    type: "hasProperty"
-  - id: "customer.subscription_tier"
-    name: "subscription_tier"
-    roles:
-    - concept: "subscription_tier"
-    verbalizes:
-    - "{Customer} has {subscription_tier}"
     type: "hasProperty"
   - id: "customer_places_order"
     name: "places"
@@ -769,36 +762,6 @@ ontology:
     verbalizes:
     - "{Shipping Address} has {delivery_instructions}"
     type: "hasProperty"
-- concept: "Subscription"
-  id: "subscription"
-  type: "EntityType"
-  description: "A recurring agreement entitling a customer to a service for a fixed term."
-  group: "customers"
-  custom_properties:
-    name@de: "Abonnement"
-    description@de: "Eine wiederkehrende Vereinbarung, die einem Kunden für eine feste Laufzeit eine Leistung zusichert."
-  relationships:
-  - id: "subscription.cancelled_at"
-    name: "cancelled_at"
-    roles:
-    - concept: "cancelled_at"
-    verbalizes:
-    - "{Subscription} has {cancelled_at}"
-    type: "hasProperty"
-  - id: "subscription.started_at"
-    name: "started_at"
-    roles:
-    - concept: "started_at"
-    verbalizes:
-    - "{Subscription} has {started_at}"
-    type: "hasProperty"
-  - id: "subscription.term"
-    name: "term"
-    roles:
-    - concept: "term"
-    verbalizes:
-    - "{Subscription} has {term}"
-    type: "hasProperty"
 - concept: "Average Order Value"
   id: "average_order_value"
   type: "MetricType"
@@ -899,40 +862,6 @@ ontology:
     - concept: "Order"
     verbalizes:
     - "{Contribution Margin 2} measures {Order}"
-    type: "measures"
-- concept: "Contribution Margin 3"
-  id: "contribution_margin_3"
-  type: "MetricType"
-  description: |-
-    CM2 minus the impact of returns (refunded revenue and return-handling costs).
-    The most realistic view of per-order profitability for ecommerce businesses.
-  iri: "http://www.entropy-data.com/ns/main/ContributionMargin3"
-  group: "controlling"
-  unit: "EUR"
-  better_when: "higher"
-  formula: "CM2 - refunded_revenue - return_handling_costs"
-  custom_properties:
-    abbreviation: "CM3"
-    name@de: "Deckungsbeitrag 3"
-    name@fr: "Marge de contribution 3"
-    description@de: "DB2 abzüglich der Auswirkungen von Retouren (erstattete Umsätze und Retourenabwicklungskosten). Die realistischste Sicht auf die Profitabilität je Bestellung im E-Commerce."
-    description@fr: "MC2 moins l'impact des retours (chiffre d'affaires remboursé et coûts de traitement des retours). La vision la plus réaliste de la rentabilité par commande en e-commerce."
-  relationships:
-  - id: "cm3_derived_from_cm2"
-    name: "derived_from"
-    description: "Contribution Margin 3 is CM2 minus the impact of returns."
-    roles:
-    - concept: "Contribution Margin 2"
-    verbalizes:
-    - "{Contribution Margin 3} derived from {Contribution Margin 2}"
-    type: "derived_from"
-  - id: "cm3_measures_order"
-    name: "measures"
-    description: "Contribution Margin 3 is measured per order."
-    roles:
-    - concept: "Order"
-    verbalizes:
-    - "{Contribution Margin 3} measures {Order}"
     type: "measures"
 - concept: "Conversion Rate"
   id: "conversion_rate"
@@ -1094,12 +1023,6 @@ ontology:
     name@fr: "Marque"
     description@de: "Marke, zu der das Produkt gehört."
     description@fr: "Marque à laquelle appartient le produit."
-- concept: "cancelled_at"
-  id: "subscription.cancelled-at"
-  type: "ValueType"
-  description: "The date the customer cancelled, if they have. Empty while the subscription runs."
-  extends:
-  - "Date"
 - concept: "carrier"
   id: "shipment.carrier"
   type: "ValueType"
@@ -1449,7 +1372,7 @@ ontology:
 - concept: "order_status"
   id: "order.order-status"
   type: "ValueType"
-  description: "Lifecycle state of the order."
+  description: "Lifecycle state of the order. An order that never shipped is cancelled; one that shipped and came back is returned, whole or in part."
   extends:
   - "String"
   examples:
@@ -1461,10 +1384,11 @@ ontology:
   - "delivered"
   - "cancelled"
   - "returned"
+  - "partially_returned"
   custom_properties:
     name@de: "Bestellstatus"
     name@fr: "Statut de la commande"
-    description@de: "Lebenszyklusstatus der Bestellung."
+    description@de: "Lebenszyklusstatus der Bestellung. Eine Bestellung, die nie versandt wurde, ist storniert; eine versandte und zurückgesandte ist retourniert, ganz oder teilweise."
     description@fr: "État du cycle de vie de la commande."
 - concept: "placed_at"
   id: "order.placed-at"
@@ -1561,12 +1485,6 @@ ontology:
     name@fr: "Taille"
     description@de: "Größenvariante unter Verwendung des für die Produktkategorie passenden Größensystems."
     description@fr: "Variante de taille, utilisant le système de tailles adapté à la catégorie de produit."
-- concept: "started_at"
-  id: "subscription.started-at"
-  type: "ValueType"
-  description: "The date the subscription first became active."
-  extends:
-  - "Date"
 - concept: "street"
   id: "postal_address.street"
   type: "ValueType"
@@ -1578,23 +1496,6 @@ ontology:
   custom_properties:
     name@de: "Straße"
     name@fr: "Rue"
-- concept: "subscription_tier"
-  id: "customer.subscription-tier"
-  type: "ValueType"
-  description: "Which subscription plan the customer is currently on."
-  extends:
-  - "String"
-  classification: "Internal"
-  examples:
-  - "plus"
-  enum:
-  - "none"
-  - "basic"
-  - "plus"
-  - "premium"
-  custom_properties:
-    name@de: "Abonnementstufe"
-    description@de: "Der Abonnementtarif, auf dem der Kunde derzeit ist."
 - concept: "tax_rate"
   id: "line_item.tax-rate"
   type: "ValueType"
@@ -1608,17 +1509,6 @@ ontology:
     name@fr: "Taux de TVA"
     description@de: "Geltender Umsatzsteuersatz als Dezimalbruch (z. B. 0,19 für 19 %)."
     description@fr: "Taux de TVA applicable sous forme de fraction décimale (p. ex. 0,19 pour 19 %)."
-- concept: "term"
-  id: "subscription.term"
-  type: "ValueType"
-  description: "The billing period the subscription renews on."
-  extends:
-  - "String"
-  examples:
-  - "annual"
-  enum:
-  - "monthly"
-  - "annual"
 - concept: "title"
   id: "product.title"
   type: "ValueType"
