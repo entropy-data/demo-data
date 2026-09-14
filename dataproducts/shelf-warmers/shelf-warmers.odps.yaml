@@ -5,6 +5,7 @@ name: "Shelf Warmers"
 status: "draft"
 type: "aggregate"
 domain: "operations"
+# edited on the git side during the smoke test
 description:
   purpose: "A list of articles with no sales in last 6 months"
 context:
