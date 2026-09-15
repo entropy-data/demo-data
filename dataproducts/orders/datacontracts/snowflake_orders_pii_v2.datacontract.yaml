@@ -160,7 +160,7 @@ schema:
       severity: "error"
     authoritativeDefinitions:
     - type: "semantics"
-      url: "https://demo.entropy-data.com/demo355150178063/semantics/global/order_id"
+      url: "http://localhost:8341/demo862056311682/semantics/global/order_id"
   - name: "PREVIOUS_ORDER_ID"
     logicalType: "string"
     description: "If this order is a follow up as customer service had to cancel the previous order, the order id of the previous order is put in there."
@@ -180,7 +180,7 @@ schema:
       type: "foreignKey"
     authoritativeDefinitions:
     - type: "semantics"
-      url: "https://demo.entropy-data.com/demo355150178063/semantics/global/order_id"
+      url: "http://localhost:8341/demo862056311682/semantics/global/order_id"
   - name: "CUSTOMER_ID"
     logicalType: "string"
     required: true
@@ -195,7 +195,7 @@ schema:
       severity: "error"
     authoritativeDefinitions:
     - type: "semantics"
-      url: "https://demo.entropy-data.com/demo355150178063/semantics/global/customer_id"
+      url: "http://localhost:8341/demo862056311682/semantics/global/customer_id"
   - name: "EMAIL"
     logicalType: "string"
     quality:
@@ -229,7 +229,7 @@ schema:
         SELECT 100.0 * COUNT({property}) / NULLIF(COUNT(*), 0) FROM {object}
     authoritativeDefinitions:
     - type: "semantics"
-      url: "https://demo.entropy-data.com/demo355150178063/semantics/global/customer_email"
+      url: "http://localhost:8341/demo862056311682/semantics/global/customer_email"
   - name: "PHONE_NUMBER"
     logicalType: "string"
     physicalType: "text"
@@ -253,7 +253,7 @@ schema:
     description: "The address that is put in the invoice."
     authoritativeDefinitions:
     - type: "semantics"
-      url: "https://demo.entropy-data.com/demo355150178063/semantics/global/billing_address"
+      url: "http://localhost:8341/demo862056311682/semantics/global/billing_address"
     properties:
     - name: "ADDRESS_LINE"
       logicalType: "string"
@@ -271,7 +271,7 @@ schema:
         severity: "error"
       authoritativeDefinitions:
       - type: "semantics"
-        url: "https://demo.entropy-data.com/demo355150178063/semantics/global/postal_address.street"
+        url: "http://localhost:8341/demo862056311682/semantics/global/postal_address.street"
     - name: "CITY_LINE"
       logicalType: "string"
       physicalType: "text"
@@ -298,7 +298,7 @@ schema:
         severity: "warning"
       authoritativeDefinitions:
       - type: "semantics"
-        url: "https://demo.entropy-data.com/demo355150178063/semantics/global/postal_address.city"
+        url: "http://localhost:8341/demo862056311682/semantics/global/postal_address.city"
   - name: "ORDER_DATE"
     logicalType: "timestamp"
     description: "Date of the order"
@@ -451,7 +451,7 @@ schema:
       type: "foreignKey"
     authoritativeDefinitions:
     - type: "semantics"
-      url: "https://demo.entropy-data.com/demo355150178063/semantics/global/order_id"
+      url: "http://localhost:8341/demo862056311682/semantics/global/order_id"
   - name: "ARTICLE_SKU"
     logicalType: "string"
     required: true
@@ -476,4 +476,4 @@ schema:
       severity: "warning"
     authoritativeDefinitions:
     - type: "semantics"
-      url: "https://demo.entropy-data.com/demo355150178063/semantics/global/sku"
+      url: "http://localhost:8341/demo862056311682/semantics/global/sku"
