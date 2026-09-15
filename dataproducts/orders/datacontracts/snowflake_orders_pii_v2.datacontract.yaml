@@ -143,10 +143,6 @@ schema:
         HAVING COUNT(DISTINCT EMAIL) > 1
       ) AS ambiguous_customers
   properties:
-  - name: "ORDER_STATUS"
-    logicalType: "string"
-    required: true
-    description: "Lifecycle state of the order."
   - name: "ORDER_ID"
     logicalType: "string"
     required: true
@@ -364,6 +360,10 @@ schema:
       businessImpact: "financial"
       query: |
         SELECT AVG({property}) FROM {object}
+  - name: "ORDER_STATUS"
+    logicalType: "string"
+    required: true
+    description: "Lifecycle state of the order."
 - name: "LINE_ITEMS"
   physicalType: "table"
   businessName: "Line Items"
