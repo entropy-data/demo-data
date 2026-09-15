@@ -143,6 +143,10 @@ schema:
         HAVING COUNT(DISTINCT EMAIL) > 1
       ) AS ambiguous_customers
   properties:
+  - name: "ORDER_STATUS"
+    logicalType: "string"
+    required: true
+    description: "Lifecycle state of the order."
   - name: "ORDER_ID"
     logicalType: "string"
     required: true
