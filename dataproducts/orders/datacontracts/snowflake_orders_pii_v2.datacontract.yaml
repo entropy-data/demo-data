@@ -2,7 +2,7 @@ apiVersion: "v3.2.0"
 kind: "DataContract"
 id: "snowflake_orders_pii_v2"
 name: "Orders v2"
-version: "2.0.0"
+version: "2.0.1"
 status: "active"
 tags:
 - "popular"
