@@ -363,7 +363,7 @@ schema:
   - name: "ORDER_STATUS"
     logicalType: "string"
     required: true
-    description: "Lifecycle state of the order."
+    description: "Lifecycle state of the order (reviewed in git)."
 - name: "LINE_ITEMS"
   physicalType: "table"
   businessName: "Line Items"
