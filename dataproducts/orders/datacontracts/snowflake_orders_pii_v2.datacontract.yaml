@@ -1,100 +1,479 @@
-dataContractSpecification: 1.1.0
-id: snowflake_orders_pii_v2
-info:
-  title: Orders v2
-  version: 2.0.0
-  description: All order-created events, with PII.
-  status: active
-  owner: sales-team
-  contact:
-    name: Scarlett Layton
-    email: scarlett.layton@demo4OH8794gsA1S7tFCbEFHxy.datamesh-manager.com
-terms:
-  usage: Max. 10x queries per day
-  limitations: Not suitable for real-time use cases
-  billing: $1000 / month
-  noticePeriod: P3M
-models:
-  orders:
-    description: Table containing order information with PII.
-    title: Orders
-    fields:
-      ORDER_ID:
-        $ref: https://demo.datamesh-manager.com/my-organization/definitions/sales/order_id
-        required: true
-        primaryKey: true
-        tags:
-          - business-key
-      PREVIOUS_ORDER_ID:
-        $ref: https://demo.datamesh-manager.com/my-organization/definitions/sales/order_id
-        description: If this order is a follow up as customer service had to cancel the previous order, the order id of the previous order is put in there.
-        title: Previous Order ID
-        references: orders.ORDER_ID
-      CUSTOMER_ID:
-        $ref: https://demo.datamesh-manager.com/my-organization/definitions/sales/customer_id
-        required: true
-      EMAIL:
-        $ref: https://demo.datamesh-manager.com/my-organization/definitions/sales/customer_email
-      PHONE_NUMBER:
-        type: text
-        description: phone number of the customer
-        title: Phone Number
-        pii: true
-      INVOICE_ADDRESS:
-        type: object
-        description: The address that is put in the invoice.
-        fields:
-          ADDRESS_LINE:
-            type: text
-            description: Street name and number
-            title: Street
-          CITY_LINE:
-            type: text
-            description: City name and ZIP Code
-            title: City and ZIP Code
-      ORDER_DATE:
-        type: timestamp
-        description: Date of the order
-        title: Order Date
-        required: true
-      ORDER_TOTAL:
-        type: decimal
-        description: Total amount of the order
-        title: Order Total
-        required: true
-        precision: 38
-        scale: 2
-  line_items:
-    description: Table containing line items of an order.
-    title: Line Items
-    fields:
-      LINE_ITEM_ID:
-        type: string
-        description: The unique identifier of the line item. A simple UUID is generated.
-        primaryKey: true
-        format: uuid
-      ORDER_ID:
-        $ref: https://demo.datamesh-manager.com/my-organization/definitions/sales/order_id
-        required: true
-        references: orders.ORDER_ID
-      ARTICLE_SKU:
-        $ref: https://demo.datamesh-manager.com/my-organization/definitions/fulfillment/sku
-        required: true
-servicelevels:
-  availability:
-    description: The server is available during support hours
-    percentage: 99.9%
-  retention:
-    description: Data is retained for one year
-    period: P1Y
-    unlimited: false
-  freshness:
-    description: The age of the youngest row in a table.
-    threshold: 25h
-  frequency:
-    description: Data is delivered once a day
-    type: batch
-    interval: daily
-    cron: 0 0 * * *
+apiVersion: "v3.2.0"
+kind: "DataContract"
+id: "snowflake_orders_pii_v2"
+name: "Orders v2"
+version: "2.0.0"
+status: "active"
 tags:
-  - popular
+- "popular"
+description:
+  purpose: "Provide analytical and similar access to all webshop orders."
+  usage: "Consumers may only request aggregated results (e.g. counts, sums, averages, distributions across groups of customers) in analytical use cases. Queries that target, filter to, or return data about a single identifiable customer are not permitted, except for fraud analysis."
+  limitations: "Data may not be given to 3rd parties."
+context:
+  instructions: |
+    PII variant of the webshop orders. Prefer snowflake_orders_npii_v2 unless
+    EMAIL, PHONE_NUMBER or INVOICE_ADDRESS are needed. Answer with aggregates
+    only; single-customer queries are allowed for fraud analysis only.
+    Join LINE_ITEMS to ORDERS on ORDER_ID. Use ORDER_TOTAL for revenue, not the
+    sum of line items. PREVIOUS_ORDER_ID links a follow-up order to the order
+    customer service cancelled. INVOICE_ADDRESS is nested: ADDRESS_LINE holds
+    street and number, CITY_LINE holds ZIP code and city.
+  verifiedStatements:
+  - question: "How many orders were placed in the last 30 days?"
+    answer: "Count rows in ORDERS where ORDER_DATE >= DATEADD(day, -30, CURRENT_DATE())."
+  - question: "What share of orders are follow-ups after a cancellation?"
+    answer: "Rows in ORDERS with PREVIOUS_ORDER_ID IS NOT NULL divided by all rows."
+  - question: "Which cities generate the most revenue?"
+    answer: "Group ORDERS by INVOICE_ADDRESS.CITY_LINE and sum ORDER_TOTAL."
+  constraints:
+  - constraint: "Do not return or export EMAIL, PHONE_NUMBER or INVOICE_ADDRESS for individual customers unless the request is a fraud analysis."
+  - constraint: "Do not pass personal data to third parties or external tools."
+  - constraint: "Use CUSTOMER_ID as the customer key, never EMAIL or PHONE_NUMBER."
+team:
+  name: "sales-team"
+  members:
+  - username: "scarlett.layton@demo.entropy-data.com"
+    name: "Scarlett Layton"
+    role: "contact"
+price:
+  priceAmount: 1000
+  priceCurrency: "USD"
+  priceUnit: "month"
+customProperties:
+- property: "noticePeriod"
+  value: "P3M"
+- property: "externalSystemId"
+  value: "catalog://sales-team/snowflake_orders_pii_v2"
+roles:
+- role: "orders.analyst.eu.read"
+  access: "read"
+  description: "Read-only access for all orders in EU"
+- role: "orders.analyst.us.read"
+  access: "read"
+  description: "Read-only access for all orders in US"
+- role: "orders.exploration.eu.read"
+  access: "read"
+  description: "Time limited role for exploration or proof-of-concept work"
+- role: "orders.exploration.us.read"
+  access: "read"
+  description: "Time limited role for exploration or proof-of-concept work"
+servers:
+- server: "snowflake"
+  type: "snowflake"
+  account: "LMTRWXS-XN14859"
+  database: "DP_WEBSHOP_ORDERS"
+  schema: "ORDERS_PII_V2"
+slaProperties:
+- property: "availability"
+  value: "99.9"
+  unit: "%"
+  description: "The server is available during support hours"
+- property: "retention"
+  value: "P1Y"
+  description: "Data is retained for one year"
+- property: "freshness"
+  value: "25h"
+  element: "ORDERS.ORDER_DATE"
+  description: "The age of the youngest row in a table."
+- property: "frequency"
+  value: "daily"
+  description: "Data is delivered once a day"
+schema:
+- name: "ORDERS"
+  physicalType: "table"
+  businessName: "Orders"
+  description: "All webshop orders since 2020-01-01. Includes canceled and returned orders."
+  quality:
+  - name: "Row Count"
+    type: "library"
+    metric: "rowCount"
+    mustBeGreaterThan: 0
+    unit: "rows"
+    description: "Orders table must not be empty."
+    dimension: "completeness"
+    severity: "error"
+  - name: "No Duplicate Order IDs"
+    type: "library"
+    metric: "duplicateValues"
+    mustBe: 0
+    arguments:
+      properties:
+      - "ORDER_ID"
+    unit: "rows"
+    description: "Each order must appear exactly once."
+    dimension: "uniqueness"
+    severity: "error"
+  - name: "Previous Order Referential Integrity"
+    type: "sql"
+    mustBe: 0
+    unit: "rows"
+    description: "Every PREVIOUS_ORDER_ID must reference an existing ORDER_ID."
+    dimension: "consistency"
+    severity: "warning"
+    query: |
+      SELECT COUNT(*)
+      FROM {object} o
+      LEFT JOIN {object} p ON o.PREVIOUS_ORDER_ID = p.ORDER_ID
+      WHERE o.PREVIOUS_ORDER_ID IS NOT NULL AND p.ORDER_ID IS NULL
+  - name: "Contact Channel Present"
+    type: "sql"
+    mustBeLessThan: 1
+    unit: "percent"
+    description: "Less than 1% of orders may lack both email and phone number. Fraud analysis needs at least one contact channel."
+    dimension: "completeness"
+    severity: "warning"
+    query: |
+      SELECT 100.0 * COUNT_IF(EMAIL IS NULL AND PHONE_NUMBER IS NULL) / NULLIF(COUNT(*), 0)
+      FROM {object}
+  - name: "One Email Per Customer"
+    type: "sql"
+    mustBe: 0
+    unit: "rows"
+    description: "A CUSTOMER_ID must not be associated with more than one email address."
+    dimension: "consistency"
+    severity: "warning"
+    query: |
+      SELECT COUNT(*)
+      FROM (
+        SELECT CUSTOMER_ID
+        FROM {object}
+        WHERE EMAIL IS NOT NULL
+        GROUP BY CUSTOMER_ID
+        HAVING COUNT(DISTINCT EMAIL) > 1
+      ) AS ambiguous_customers
+  properties:
+  - name: "ORDER_ID"
+    logicalType: "string"
+    required: true
+    primaryKey: true
+    tags:
+    - "business-key"
+    quality:
+    - name: "Order ID Not Null"
+      type: "library"
+      metric: "nullValues"
+      mustBe: 0
+      unit: "rows"
+      description: "Order ID must never be null."
+      dimension: "completeness"
+      severity: "error"
+    authoritativeDefinitions:
+    - type: "semantics"
+      url: "http://localhost:8341/demo364713313719/semantics/global/order_id"
+  - name: "PREVIOUS_ORDER_ID"
+    logicalType: "string"
+    description: "If this order is a follow up as customer service had to cancel the previous order, the order id of the previous order is put in there."
+    businessName: "Previous Order ID"
+    quality:
+    - name: "Previous Order ID Not Self-Referencing"
+      type: "sql"
+      mustBe: 0
+      unit: "rows"
+      description: "An order must not reference itself as its own predecessor."
+      dimension: "consistency"
+      severity: "error"
+      query: |
+        SELECT COUNT(*) FROM {object} WHERE {property} = ORDER_ID
+    relationships:
+    - to: "ORDERS.ORDER_ID"
+      type: "foreignKey"
+    authoritativeDefinitions:
+    - type: "semantics"
+      url: "http://localhost:8341/demo364713313719/semantics/global/order_id"
+  - name: "CUSTOMER_ID"
+    logicalType: "string"
+    required: true
+    quality:
+    - name: "Customer ID Not Null"
+      type: "library"
+      metric: "nullValues"
+      mustBe: 0
+      unit: "rows"
+      description: "Customer ID must never be null."
+      dimension: "completeness"
+      severity: "error"
+    authoritativeDefinitions:
+    - type: "semantics"
+      url: "http://localhost:8341/demo364713313719/semantics/global/customer_id"
+  - name: "EMAIL"
+    logicalType: "string"
+    quality:
+    - name: "Email Format"
+      type: "library"
+      metric: "invalidValues"
+      mustBe: 0
+      arguments:
+        pattern: "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+      unit: "rows"
+      description: "Email must be a syntactically valid address."
+      dimension: "conformity"
+      severity: "error"
+    - name: "Email Stored Lowercase"
+      type: "sql"
+      mustBe: 0
+      unit: "rows"
+      description: "Emails must be stored lowercase so they can be matched across systems."
+      dimension: "conformity"
+      severity: "warning"
+      query: |
+        SELECT COUNT(*) FROM {object} WHERE {property} <> LOWER({property})
+    - name: "Email Coverage"
+      type: "sql"
+      mustBeGreaterOrEqualTo: 95
+      unit: "percent"
+      description: "At least 95% of orders must carry an email address."
+      dimension: "coverage"
+      severity: "warning"
+      query: |
+        SELECT 100.0 * COUNT({property}) / NULLIF(COUNT(*), 0) FROM {object}
+    authoritativeDefinitions:
+    - type: "semantics"
+      url: "http://localhost:8341/demo364713313719/semantics/global/customer_email"
+  - name: "PHONE_NUMBER"
+    logicalType: "string"
+    physicalType: "text"
+    description: "phone number of the customer"
+    businessName: "Phone Number"
+    tags:
+    - "pii:true"
+    quality:
+    - name: "Phone Number E.164 Format"
+      type: "library"
+      metric: "invalidValues"
+      mustBe: 0
+      arguments:
+        pattern: "^\\+[1-9]\\d{7,14}$"
+      unit: "rows"
+      description: "Phone numbers must be normalized to E.164 (e.g. +4915112345678). Legacy orders may still carry unnormalized values."
+      dimension: "conformity"
+      severity: "warning"
+  - name: "INVOICE_ADDRESS"
+    logicalType: "object"
+    description: "The address that is put in the invoice."
+    authoritativeDefinitions:
+    - type: "semantics"
+      url: "http://localhost:8341/demo364713313719/semantics/global/billing_address"
+    properties:
+    - name: "ADDRESS_LINE"
+      logicalType: "string"
+      physicalType: "text"
+      description: "Street name and number"
+      businessName: "Street"
+      quality:
+      - name: "Address Line Not Null"
+        type: "library"
+        metric: "nullValues"
+        mustBe: 0
+        unit: "rows"
+        description: "An invoice address must always carry a street line."
+        dimension: "completeness"
+        severity: "error"
+      authoritativeDefinitions:
+      - type: "semantics"
+        url: "http://localhost:8341/demo364713313719/semantics/global/postal_address.street"
+    - name: "CITY_LINE"
+      logicalType: "string"
+      physicalType: "text"
+      description: "City name and ZIP Code"
+      businessName: "City and ZIP Code"
+      quality:
+      - name: "City Line Not Null"
+        type: "library"
+        metric: "nullValues"
+        mustBe: 0
+        unit: "rows"
+        description: "An invoice address must always carry a city line."
+        dimension: "completeness"
+        severity: "error"
+      - name: "City Line Contains ZIP Code"
+        type: "library"
+        metric: "invalidValues"
+        mustBe: 0
+        arguments:
+          pattern: ".*\\d{4,5}.*"
+        unit: "rows"
+        description: "The city line must contain a 4 to 5 digit ZIP code next to the city name."
+        dimension: "conformity"
+        severity: "warning"
+      authoritativeDefinitions:
+      - type: "semantics"
+        url: "http://localhost:8341/demo364713313719/semantics/global/postal_address.city"
+  - name: "ORDER_DATE"
+    logicalType: "timestamp"
+    description: "Date of the order"
+    businessName: "Order Date"
+    required: true
+    quality:
+    - name: "Order Date Not Null"
+      type: "library"
+      metric: "nullValues"
+      mustBe: 0
+      unit: "rows"
+      description: "Order date must never be null."
+      dimension: "completeness"
+      severity: "error"
+    - name: "Order Date In Expected Range"
+      type: "sql"
+      mustBe: 0
+      unit: "rows"
+      description: "Order date must not be before 2020-01-01 and must not lie in the future."
+      dimension: "accuracy"
+      severity: "error"
+      query: |
+        SELECT COUNT(*)
+        FROM {object}
+        WHERE {property} < '2020-01-01' OR {property} > CURRENT_TIMESTAMP()
+  - name: "ORDER_TOTAL"
+    logicalType: "number"
+    physicalType: "number"
+    description: "Total amount of the order"
+    businessName: "Order Total"
+    required: true
+    quality:
+    - name: "Order Total Not Null"
+      type: "library"
+      metric: "nullValues"
+      mustBe: 0
+      unit: "rows"
+      description: "Order total must never be null."
+      dimension: "completeness"
+      severity: "error"
+    - name: "Order Total Not Negative"
+      type: "sql"
+      mustBe: 0
+      unit: "rows"
+      description: "Order total must not be negative. Refunds are modeled as separate returns, not as negative orders."
+      dimension: "accuracy"
+      severity: "error"
+      businessImpact: "financial"
+      query: |
+        SELECT COUNT(*) FROM {object} WHERE {property} < 0
+    - name: "Order Total Average Plausible"
+      type: "sql"
+      mustBeBetween:
+      - 20
+      - 500
+      description: "The average order total must stay within the historical corridor. A drift indicates a currency or unit change upstream."
+      dimension: "accuracy"
+      severity: "warning"
+      businessImpact: "financial"
+      query: |
+        SELECT AVG({property}) FROM {object}
+- name: "LINE_ITEMS"
+  physicalType: "table"
+  businessName: "Line Items"
+  description: "Table containing line items of an order."
+  quality:
+  - name: "Row Count"
+    type: "library"
+    metric: "rowCount"
+    mustBeGreaterThan: 0
+    unit: "rows"
+    description: "Line items table must not be empty."
+    dimension: "completeness"
+    severity: "error"
+  - name: "No Duplicate Line Item IDs"
+    type: "library"
+    metric: "duplicateValues"
+    mustBe: 0
+    arguments:
+      properties:
+      - "LINE_ITEM_ID"
+    unit: "rows"
+    description: "Each line item must appear exactly once."
+    dimension: "uniqueness"
+    severity: "error"
+  - name: "No Orphan Line Items"
+    type: "sql"
+    mustBe: 0
+    unit: "rows"
+    description: "Every line item must belong to an existing order."
+    dimension: "consistency"
+    severity: "error"
+    query: |
+      SELECT COUNT(*)
+      FROM {object} li
+      LEFT JOIN ORDERS o ON li.ORDER_ID = o.ORDER_ID
+      WHERE o.ORDER_ID IS NULL
+  - name: "Every Order Has Line Items"
+    type: "sql"
+    mustBe: 0
+    unit: "rows"
+    description: "Every order must have at least one line item."
+    dimension: "coverage"
+    severity: "error"
+    query: |
+      SELECT COUNT(*)
+      FROM ORDERS o
+      LEFT JOIN {object} li ON o.ORDER_ID = li.ORDER_ID
+      WHERE li.ORDER_ID IS NULL
+  properties:
+  - name: "LINE_ITEM_ID"
+    logicalType: "string"
+    description: "The unique identifier of the line item. A simple UUID is generated."
+    primaryKey: true
+    logicalTypeOptions:
+      format: "uuid"
+    quality:
+    - name: "Line Item ID Not Null"
+      type: "library"
+      metric: "nullValues"
+      mustBe: 0
+      unit: "rows"
+      description: "Line item ID must never be null."
+      dimension: "completeness"
+      severity: "error"
+    - name: "Line Item ID UUID Format"
+      type: "library"
+      metric: "invalidValues"
+      mustBe: 0
+      arguments:
+        pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+      unit: "rows"
+      description: "Line item ID must be a UUID."
+      dimension: "conformity"
+      severity: "error"
+  - name: "ORDER_ID"
+    logicalType: "string"
+    required: true
+    quality:
+    - name: "Order ID Not Null"
+      type: "library"
+      metric: "nullValues"
+      mustBe: 0
+      unit: "rows"
+      description: "Order ID on line items must never be null."
+      dimension: "completeness"
+      severity: "error"
+    relationships:
+    - to: "ORDERS.ORDER_ID"
+      type: "foreignKey"
+    authoritativeDefinitions:
+    - type: "semantics"
+      url: "http://localhost:8341/demo364713313719/semantics/global/order_id"
+  - name: "ARTICLE_SKU"
+    logicalType: "string"
+    required: true
+    quality:
+    - name: "Article SKU Not Null"
+      type: "library"
+      metric: "nullValues"
+      mustBe: 0
+      unit: "rows"
+      description: "Article SKU must never be null."
+      dimension: "completeness"
+      severity: "error"
+    - name: "Article SKU Without Whitespace"
+      type: "library"
+      metric: "invalidValues"
+      mustBe: 0
+      arguments:
+        pattern: "^\\S+$"
+      unit: "rows"
+      description: "Article SKU must be a single token without whitespace."
+      dimension: "conformity"
+      severity: "warning"
+    authoritativeDefinitions:
+    - type: "semantics"
+      url: "http://localhost:8341/demo364713313719/semantics/global/sku"
