@@ -2,13 +2,13 @@ apiVersion: "v3.2.0"
 kind: "DataContract"
 id: "snowflake_orders_pii_v2"
 name: "Orders v2"
-version: 2.0.3
+version: "2.0.3"
 status: "active"
 tags:
 - "popular"
 - "e2e-pr"
 description:
-  purpose: E2E purpose for the pull request route.
+  purpose: "E2E purpose for the pull request route."
   usage: "E2E usage edited on gh-flow via API."
   limitations: "E2E limitation edited in GitHub on the mirror branch."
 context:
