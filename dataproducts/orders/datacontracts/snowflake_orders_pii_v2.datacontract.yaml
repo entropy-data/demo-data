@@ -10,7 +10,7 @@ tags:
 description:
   purpose: "E2E purpose for the pull request route."
   usage: "E2E usage edited on gh-flow via API."
-  limitations: "E2E limitation edited in GitHub on the mirror branch."
+  limitations: E2E reviewer edit on the pull request.
 context:
   instructions: |
     PII variant of the webshop orders. Prefer snowflake_orders_npii_v2 unless
