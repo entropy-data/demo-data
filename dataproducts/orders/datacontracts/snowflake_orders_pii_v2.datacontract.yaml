@@ -2,14 +2,15 @@ apiVersion: "v3.2.0"
 kind: "DataContract"
 id: "snowflake_orders_pii_v2"
 name: "Orders v2"
-version: "2.0.0"
+version: "2.0.2"
 status: "active"
 tags:
 - "popular"
+- "e2e-pr"
 description:
-  purpose: "Provide analytical and similar access to all webshop orders."
-  usage: "Consumers may only request aggregated results (e.g. counts, sums, averages, distributions across groups of customers) in analytical use cases. Queries that target, filter to, or return data about a single identifiable customer are not permitted, except for fraud analysis."
-  limitations: "Data may not be given to 3rd parties."
+  purpose: "E2E purpose edited in the app while git moved."
+  usage: "E2E usage edited on gh-flow via API."
+  limitations: "E2E limitation edited in GitHub on the mirror branch."
 context:
   instructions: |
     PII variant of the webshop orders. Prefer snowflake_orders_npii_v2 unless
@@ -71,7 +72,7 @@ slaProperties:
   description: "The server is available during support hours"
 - property: "retention"
   value: "P1Y"
-  description: "Data is retained for one year"
+  description: "Data is retained for one year (edited on main during E2E)"
 - property: "freshness"
   value: "25h"
   element: "ORDERS.ORDER_DATE"
@@ -149,6 +150,9 @@ schema:
     primaryKey: true
     tags:
     - "business-key"
+    authoritativeDefinitions:
+    - type: "semantics"
+      url: "http://localhost:8341/demo756546792127/semantics/global/order_id"
     quality:
     - name: "Order ID Not Null"
       type: "library"
@@ -158,13 +162,16 @@ schema:
       description: "Order ID must never be null."
       dimension: "completeness"
       severity: "error"
-    authoritativeDefinitions:
-    - type: "semantics"
-      url: "http://localhost:8341/demo756546792127/semantics/global/order_id"
   - name: "PREVIOUS_ORDER_ID"
     logicalType: "string"
     description: "If this order is a follow up as customer service had to cancel the previous order, the order id of the previous order is put in there."
     businessName: "Previous Order ID"
+    relationships:
+    - to: "ORDERS.ORDER_ID"
+      type: "foreignKey"
+    authoritativeDefinitions:
+    - type: "semantics"
+      url: "http://localhost:8341/demo756546792127/semantics/global/order_id"
     quality:
     - name: "Previous Order ID Not Self-Referencing"
       type: "sql"
@@ -175,15 +182,12 @@ schema:
       severity: "error"
       query: |
         SELECT COUNT(*) FROM {object} WHERE {property} = ORDER_ID
-    relationships:
-    - to: "ORDERS.ORDER_ID"
-      type: "foreignKey"
-    authoritativeDefinitions:
-    - type: "semantics"
-      url: "http://localhost:8341/demo756546792127/semantics/global/order_id"
   - name: "CUSTOMER_ID"
     logicalType: "string"
     required: true
+    authoritativeDefinitions:
+    - type: "semantics"
+      url: "http://localhost:8341/demo756546792127/semantics/global/customer_id"
     quality:
     - name: "Customer ID Not Null"
       type: "library"
@@ -193,11 +197,11 @@ schema:
       description: "Customer ID must never be null."
       dimension: "completeness"
       severity: "error"
-    authoritativeDefinitions:
-    - type: "semantics"
-      url: "http://localhost:8341/demo756546792127/semantics/global/customer_id"
   - name: "EMAIL"
     logicalType: "string"
+    authoritativeDefinitions:
+    - type: "semantics"
+      url: "http://localhost:8341/demo756546792127/semantics/global/customer_email"
     quality:
     - name: "Email Format"
       type: "library"
@@ -227,9 +231,6 @@ schema:
       severity: "warning"
       query: |
         SELECT 100.0 * COUNT({property}) / NULLIF(COUNT(*), 0) FROM {object}
-    authoritativeDefinitions:
-    - type: "semantics"
-      url: "http://localhost:8341/demo756546792127/semantics/global/customer_email"
   - name: "PHONE_NUMBER"
     logicalType: "string"
     physicalType: "text"
@@ -260,6 +261,9 @@ schema:
       physicalType: "text"
       description: "Street name and number"
       businessName: "Street"
+      authoritativeDefinitions:
+      - type: "semantics"
+        url: "http://localhost:8341/demo756546792127/semantics/global/postal_address.street"
       quality:
       - name: "Address Line Not Null"
         type: "library"
@@ -269,14 +273,14 @@ schema:
         description: "An invoice address must always carry a street line."
         dimension: "completeness"
         severity: "error"
-      authoritativeDefinitions:
-      - type: "semantics"
-        url: "http://localhost:8341/demo756546792127/semantics/global/postal_address.street"
     - name: "CITY_LINE"
       logicalType: "string"
       physicalType: "text"
       description: "City name and ZIP Code"
       businessName: "City and ZIP Code"
+      authoritativeDefinitions:
+      - type: "semantics"
+        url: "http://localhost:8341/demo756546792127/semantics/global/postal_address.city"
       quality:
       - name: "City Line Not Null"
         type: "library"
@@ -296,9 +300,6 @@ schema:
         description: "The city line must contain a 4 to 5 digit ZIP code next to the city name."
         dimension: "conformity"
         severity: "warning"
-      authoritativeDefinitions:
-      - type: "semantics"
-        url: "http://localhost:8341/demo756546792127/semantics/global/postal_address.city"
   - name: "ORDER_DATE"
     logicalType: "timestamp"
     description: "Timestamp the order was placed, in UTC."
@@ -437,6 +438,12 @@ schema:
   - name: "ORDER_ID"
     logicalType: "string"
     required: true
+    relationships:
+    - to: "ORDERS.ORDER_ID"
+      type: "foreignKey"
+    authoritativeDefinitions:
+    - type: "semantics"
+      url: "http://localhost:8341/demo756546792127/semantics/global/order_id"
     quality:
     - name: "Order ID Not Null"
       type: "library"
@@ -446,15 +453,12 @@ schema:
       description: "Order ID on line items must never be null."
       dimension: "completeness"
       severity: "error"
-    relationships:
-    - to: "ORDERS.ORDER_ID"
-      type: "foreignKey"
-    authoritativeDefinitions:
-    - type: "semantics"
-      url: "http://localhost:8341/demo756546792127/semantics/global/order_id"
   - name: "ARTICLE_SKU"
     logicalType: "string"
     required: true
+    authoritativeDefinitions:
+    - type: "semantics"
+      url: "http://localhost:8341/demo756546792127/semantics/global/sku"
     quality:
     - name: "Article SKU Not Null"
       type: "library"
@@ -474,6 +478,3 @@ schema:
       description: "Article SKU must be a single token without whitespace."
       dimension: "conformity"
       severity: "warning"
-    authoritativeDefinitions:
-    - type: "semantics"
-      url: "http://localhost:8341/demo756546792127/semantics/global/sku"
