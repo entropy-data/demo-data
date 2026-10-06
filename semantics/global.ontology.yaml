@@ -7,6 +7,26 @@ custom_properties:
   display_name: "Global"
   owner: "governance-group"
 ontology:
+- concept: "B2B"
+  id: "b2b"
+  type: "GroupType"
+  description: "Companies and public institutions that buy for their business, on invoice and under negotiated payment terms."
+  iri: "http://www.entropy-data.com/ns/main/B2B"
+  custom_properties:
+    name@de: "B2B"
+    name@fr: "B2B"
+    description@de: "Unternehmen und öffentliche Einrichtungen, die für den geschäftlichen Bedarf einkaufen, auf Rechnung und zu vereinbarten Zahlungsbedingungen."
+    description@fr: "Entreprises et organismes publics qui achètent pour leurs besoins professionnels, sur facture et selon des conditions de paiement négociées."
+- concept: "B2C"
+  id: "b2c"
+  type: "GroupType"
+  description: "Private consumers who buy for personal use, with a registered account or as guests."
+  iri: "http://www.entropy-data.com/ns/main/B2C"
+  custom_properties:
+    name@de: "B2C"
+    name@fr: "B2C"
+    description@de: "Privatkunden, die für den persönlichen Bedarf einkaufen, mit registriertem Konto oder als Gast."
+    description@fr: "Particuliers qui achètent pour un usage personnel, avec un compte enregistré ou en tant qu'invités."
 - concept: "Catalog"
   id: "catalog"
   type: "GroupType"
@@ -27,16 +47,6 @@ ontology:
     name@fr: "Contrôle de gestion"
     description@de: "Finanzkennzahlen und kommerzielle Leistungsindikatoren."
     description@fr: "Indicateurs financiers et mesures de performance commerciale."
-- concept: "Customers"
-  id: "customers"
-  type: "GroupType"
-  description: "People and households the business serves."
-  iri: "http://www.entropy-data.com/ns/main/Customers"
-  custom_properties:
-    name@de: "Kunden"
-    name@fr: "Clients"
-    description@de: "Personen und Haushalte, die das Unternehmen bedient."
-    description@fr: "Personnes et foyers servis par l'entreprise."
 - concept: "Fulfillment"
   id: "fulfillment"
   type: "GroupType"
@@ -71,9 +81,9 @@ ontology:
   id: "customer_email"
   type: "ValueType"
   shared: true
-  description: "The email address a customer is reached at."
+  description: "The email address of a B2C customer."
   iri: "http://www.entropy-data.com/ns/main/customerEmail"
-  group: "customers"
+  group: "b2c"
   extends:
   - "String"
   classification: "Restricted"
@@ -83,15 +93,15 @@ ontology:
   custom_properties:
     name@de: "Kunden-E-Mail"
     name@fr: "E-mail du client"
-    description@de: "Die E-Mail-Adresse eines Kunden."
-    description@fr: "L'adresse e-mail d'un client."
+    description@de: "Die E-Mail-Adresse eines B2C-Kunden."
+    description@fr: "L'adresse e-mail d'un client B2C."
 - concept: "Customer ID"
   id: "customer_id"
   type: "ValueType"
   shared: true
-  description: "The internal ID of any customer in the online shop. Guest customers have a customer ID as well."
+  description: "The internal ID of a B2C customer in the online shop. Guest customers have a customer ID as well."
   iri: "http://www.entropy-data.com/ns/main/customerId"
-  group: "customers"
+  group: "b2c"
   extends:
   - "String"
   classification: "Confidential"
@@ -100,8 +110,8 @@ ontology:
   custom_properties:
     name@de: "Kunden-ID"
     name@fr: "ID du client"
-    description@de: "Die interne ID jedes Kunden im Online-Shop. Gastkunden haben ebenfalls eine Kunden-ID."
-    description@fr: "L'identifiant interne de tout client dans la boutique en ligne. Les clients invités ont également un identifiant client."
+    description@de: "Die interne ID eines B2C-Kunden im Online-Shop. Gastkunden haben ebenfalls eine Kunden-ID."
+    description@fr: "L'identifiant interne d'un client B2C dans la boutique en ligne. Les clients invités ont également un identifiant client."
 - concept: "Last Updated Timestamp"
   id: "actual_timestamp"
   type: "ValueType"
@@ -125,18 +135,6 @@ ontology:
     description@fr: |-
       L'horodatage auquel l'enregistrement source sous-jacent a été mis à jour pour la dernière fois.
       Reflète l'heure du changement métier telle que rapportée par le système source, et non le moment où l'enregistrement a été observé ou chargé dans le produit de données.
-- concept: "Loyalty Tier"
-  id: "loyalty_tier"
-  type: "ValueType"
-  shared: true
-  description: "The loyalty programme level a customer has reached."
-  group: "customers"
-  extends:
-  - "String"
-  enum:
-  - "Bronze"
-  - "Silver"
-  - "Gold"
 - concept: "Order ID"
   id: "order_id"
   type: "ValueType"
@@ -224,6 +222,24 @@ ontology:
     description@fr: |-
       Une unité de gestion de stock (SKU) est un identifiant interne unique pour un article.
       Elle est généralement associée au code-barres d'un article, tel que l'EAN/GTIN.
+- concept: "VAT ID"
+  id: "vat_id"
+  type: "ValueType"
+  shared: true
+  description: "VAT identification number of a business, in EU VIES format. Required for reverse-charge invoices to B2B customers."
+  iri: "http://www.entropy-data.com/ns/main/vatId"
+  group: "b2b"
+  extends:
+  - "String"
+  classification: "Restricted"
+  examples:
+  - "DE123456789"
+  pattern: "^[A-Z]{2}[A-Z0-9]{2,12}$"
+  custom_properties:
+    name@de: "Umsatzsteuer-ID"
+    name@fr: "Numéro de TVA"
+    description@de: "Umsatzsteuer-Identifikationsnummer eines Unternehmens im EU-VIES-Format. Erforderlich für Rechnungen an B2B-Kunden im Reverse-Charge-Verfahren."
+    description@fr: "Numéro d'identification à la TVA d'une entreprise, au format VIES UE. Requis pour les factures en autoliquidation aux clients B2B."
 - concept: "Article"
   id: "article"
   type: "EntityType"
@@ -271,12 +287,268 @@ ontology:
     verbalizes:
     - "{Article} has {Stock Keeping Unit}"
     type: "hasProperty"
+- concept: "B2B Customer"
+  id: "b2b_customer"
+  type: "EntityType"
+  description: "A company or public institution that buys in the online shop for its business, on invoice and under negotiated payment terms."
+  iri: "http://www.entropy-data.com/ns/main/B2BCustomer"
+  group: "b2b"
+  ai_context:
+    synonyms:
+    - "business customer"
+    - "business account"
+    - "corporate customer"
+    - "Geschäftskunde"
+  custom_properties:
+    owl:equivalentClass: "http://schema.org/Organization"
+    name@de: "B2B-Kunde"
+    name@fr: "Client B2B"
+    description@de: "Ein Unternehmen oder eine öffentliche Einrichtung, das bzw. die im Online-Shop für den geschäftlichen Bedarf einkauft, auf Rechnung und zu vereinbarten Zahlungsbedingungen."
+    description@fr: "Une entreprise ou un organisme public qui achète dans la boutique en ligne pour ses besoins professionnels, sur facture et selon des conditions de paiement négociées."
+  relationships:
+  - id: "b2b_customer.account_number"
+    name: "account_number"
+    roles:
+    - concept: "account_number"
+    verbalizes:
+    - "{B2B Customer} has {account_number}"
+    type: "hasProperty"
+  - id: "b2b_customer.company_size"
+    name: "company_size"
+    roles:
+    - concept: "company_size"
+    verbalizes:
+    - "{B2B Customer} has {company_size}"
+    type: "hasProperty"
+  - id: "b2b_customer.credit_limit"
+    name: "credit_limit"
+    roles:
+    - concept: "credit_limit"
+    verbalizes:
+    - "{B2B Customer} has {credit_limit}"
+    type: "hasProperty"
+  - id: "b2b_customer.duns_number"
+    name: "duns_number"
+    roles:
+    - concept: "duns_number"
+    verbalizes:
+    - "{B2B Customer} has {duns_number}"
+    type: "hasProperty"
+  - id: "b2b_customer.industry_code"
+    name: "industry_code"
+    roles:
+    - concept: "industry_code"
+    verbalizes:
+    - "{B2B Customer} has {industry_code}"
+    type: "hasProperty"
+  - id: "b2b_customer.invoice_email"
+    name: "invoice_email"
+    roles:
+    - concept: "invoice_email"
+    verbalizes:
+    - "{B2B Customer} has {invoice_email}"
+    type: "hasProperty"
+  - id: "b2b_customer.legal_name"
+    name: "legal_name"
+    roles:
+    - concept: "legal_name"
+    verbalizes:
+    - "{B2B Customer} has {legal_name}"
+    type: "hasProperty"
+  - id: "b2b_customer.onboarded_at"
+    name: "onboarded_at"
+    roles:
+    - concept: "onboarded_at"
+    verbalizes:
+    - "{B2B Customer} has {onboarded_at}"
+    type: "hasProperty"
+  - id: "b2b_customer.payment_terms"
+    name: "payment_terms"
+    roles:
+    - concept: "payment_terms"
+    verbalizes:
+    - "{B2B Customer} has {payment_terms}"
+    type: "hasProperty"
+  - id: "b2b_customer.purchase_order_required"
+    name: "purchase_order_required"
+    roles:
+    - concept: "purchase_order_required"
+    verbalizes:
+    - "{B2B Customer} has {purchase_order_required}"
+    type: "hasProperty"
+  - id: "b2b_customer.vat_id"
+    name: "vat_id"
+    roles:
+    - concept: "VAT ID"
+    verbalizes:
+    - "{B2B Customer} has {VAT ID}"
+    type: "hasProperty"
+  - id: "b2b_customer_invoiced_at_billing_address"
+    name: "invoiced_at"
+    description: "A B2B customer is invoiced at one or more billing addresses, for example one per cost centre."
+    roles:
+    - concept: "Billing Address"
+    multiplicity: "OneToMany"
+    verbalizes:
+    - "{B2B Customer} invoiced at {Billing Address}"
+  - id: "b2b_customer_places_order"
+    name: "places"
+    description: "A B2B customer places one or more orders, typically referencing its own purchase order number."
+    roles:
+    - concept: "Order"
+      role_name: "order"
+    multiplicity: "OneToMany"
+    verbalizes:
+    - "{B2B Customer} places {Order}"
+  - id: "b2b_customer_subsidiary_of"
+    name: "subsidiary_of"
+    description: "A B2B customer can be a subsidiary of a parent company's account, so credit limits and reporting roll up to the corporate group."
+    roles:
+    - concept: "B2B Customer"
+      role_name: "parent"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2B Customer} subsidiary of {B2B Customer}"
+- concept: "B2C Customer"
+  id: "b2c_customer"
+  type: "EntityType"
+  description: "A natural person who buys in the online shop for private use, with a registered account or as a guest."
+  iri: "http://www.entropy-data.com/ns/main/B2CCustomer"
+  group: "b2c"
+  ai_context:
+    synonyms:
+    - "consumer"
+    - "private customer"
+    - "end customer"
+    - "Privatkunde"
+  custom_properties:
+    owl:equivalentClass: "http://schema.org/Person"
+    name@de: "B2C-Kunde"
+    name@fr: "Client B2C"
+    description@de: "Eine natürliche Person, die im Online-Shop für den privaten Gebrauch einkauft, mit registriertem Konto oder als Gast."
+    description@fr: "Une personne physique qui achète dans la boutique en ligne pour un usage privé, avec un compte enregistré ou en tant qu'invité."
+  relationships:
+  - id: "b2c_customer.account_status"
+    name: "account_status"
+    roles:
+    - concept: "account_status"
+    verbalizes:
+    - "{B2C Customer} has {account_status}"
+    type: "hasProperty"
+  - id: "b2c_customer.customer_email"
+    name: "customer_email"
+    roles:
+    - concept: "Customer Email"
+    verbalizes:
+    - "{B2C Customer} has {Customer Email}"
+    type: "hasProperty"
+  - id: "b2c_customer.customer_id"
+    name: "customer_id"
+    roles:
+    - concept: "Customer ID"
+    verbalizes:
+    - "{B2C Customer} has {Customer ID}"
+    type: "hasProperty"
+  - id: "b2c_customer.customer_type"
+    name: "customer_type"
+    roles:
+    - concept: "customer_type"
+    verbalizes:
+    - "{B2C Customer} has {customer_type}"
+    type: "hasProperty"
+  - id: "b2c_customer.date_of_birth"
+    name: "date_of_birth"
+    roles:
+    - concept: "date_of_birth"
+    verbalizes:
+    - "{B2C Customer} has {date_of_birth}"
+    type: "hasProperty"
+  - id: "b2c_customer.first_name"
+    name: "first_name"
+    roles:
+    - concept: "first_name"
+    verbalizes:
+    - "{B2C Customer} has {first_name}"
+    type: "hasProperty"
+  - id: "b2c_customer.gender"
+    name: "gender"
+    roles:
+    - concept: "gender"
+    verbalizes:
+    - "{B2C Customer} has {gender}"
+    type: "hasProperty"
+  - id: "b2c_customer.last_login_at"
+    name: "last_login_at"
+    roles:
+    - concept: "last_login_at"
+    verbalizes:
+    - "{B2C Customer} has {last_login_at}"
+    type: "hasProperty"
+  - id: "b2c_customer.last_name"
+    name: "last_name"
+    roles:
+    - concept: "last_name"
+    verbalizes:
+    - "{B2C Customer} has {last_name}"
+    type: "hasProperty"
+  - id: "b2c_customer.loyalty_points_balance"
+    name: "loyalty_points_balance"
+    roles:
+    - concept: "loyalty_points_balance"
+    verbalizes:
+    - "{B2C Customer} has {loyalty_points_balance}"
+    type: "hasProperty"
+  - id: "b2c_customer.loyalty_tier"
+    name: "loyalty_tier"
+    roles:
+    - concept: "loyalty_tier"
+    verbalizes:
+    - "{B2C Customer} has {loyalty_tier}"
+    type: "hasProperty"
+  - id: "b2c_customer.marketing_consent"
+    name: "marketing_consent"
+    roles:
+    - concept: "marketing_consent"
+    verbalizes:
+    - "{B2C Customer} has {marketing_consent}"
+    type: "hasProperty"
+  - id: "b2c_customer.preferred_language"
+    name: "preferred_language"
+    roles:
+    - concept: "preferred_language"
+    verbalizes:
+    - "{B2C Customer} has {preferred_language}"
+    type: "hasProperty"
+  - id: "b2c_customer.registered_at"
+    name: "registered_at"
+    roles:
+    - concept: "registered_at"
+    verbalizes:
+    - "{B2C Customer} has {registered_at}"
+    type: "hasProperty"
+  - id: "b2c_customer_places_order"
+    name: "places"
+    description: "A B2C customer places one or more orders."
+    roles:
+    - concept: "Order"
+      role_name: "order"
+    multiplicity: "OneToMany"
+    verbalizes:
+    - "{B2C Customer} places {Order}"
+  - id: "b2c_customer_saves_shipping_address"
+    name: "saves"
+    description: "A registered B2C customer saves one or more shipping addresses in their address book for checkout."
+    roles:
+    - concept: "Shipping Address"
+    multiplicity: "OneToMany"
+    verbalizes:
+    - "{B2C Customer} saves {Shipping Address}"
 - concept: "Billing Address"
   id: "billing_address"
   type: "EntityType"
   description: "A postal address used on the invoice for an order. Sub-type of Postal Address."
   iri: "http://www.entropy-data.com/ns/main/BillingAddress"
-  group: "customers"
+  group: "sales"
   extends:
   - "Postal Address"
   custom_properties:
@@ -295,130 +567,10 @@ ontology:
   - id: "billing_address.vat_id"
     name: "vat_id"
     roles:
-    - concept: "vat_id"
+    - concept: "VAT ID"
     verbalizes:
-    - "{Billing Address} has {vat_id}"
+    - "{Billing Address} has {VAT ID}"
     type: "hasProperty"
-- concept: "Customer"
-  id: "customer"
-  type: "EntityType"
-  description: "A natural person who places orders in the online shop."
-  iri: "http://www.entropy-data.com/ns/main/Customer"
-  group: "customers"
-  custom_properties:
-    owl:equivalentClass: "http://schema.org/Person"
-    name@de: "Kunde"
-    name@fr: "Client"
-    description@de: "Eine natürliche Person, die Bestellungen im Online-Shop aufgibt."
-    description@fr: "Une personne physique qui passe des commandes dans la boutique en ligne."
-  relationships:
-  - id: "customer.account_status"
-    name: "account_status"
-    roles:
-    - concept: "account_status"
-    verbalizes:
-    - "{Customer} has {account_status}"
-    type: "hasProperty"
-  - id: "customer.customer_email"
-    name: "customer_email"
-    roles:
-    - concept: "Customer Email"
-    verbalizes:
-    - "{Customer} has {Customer Email}"
-    type: "hasProperty"
-  - id: "customer.customer_id"
-    name: "customer_id"
-    roles:
-    - concept: "Customer ID"
-    verbalizes:
-    - "{Customer} has {Customer ID}"
-    type: "hasProperty"
-  - id: "customer.customer_type"
-    name: "customer_type"
-    roles:
-    - concept: "customer_type"
-    verbalizes:
-    - "{Customer} has {customer_type}"
-    type: "hasProperty"
-  - id: "customer.date_of_birth"
-    name: "date_of_birth"
-    roles:
-    - concept: "date_of_birth"
-    verbalizes:
-    - "{Customer} has {date_of_birth}"
-    type: "hasProperty"
-  - id: "customer.first_name"
-    name: "first_name"
-    roles:
-    - concept: "first_name"
-    verbalizes:
-    - "{Customer} has {first_name}"
-    type: "hasProperty"
-  - id: "customer.gender"
-    name: "gender"
-    roles:
-    - concept: "gender"
-    verbalizes:
-    - "{Customer} has {gender}"
-    type: "hasProperty"
-  - id: "customer.last_login_at"
-    name: "last_login_at"
-    roles:
-    - concept: "last_login_at"
-    verbalizes:
-    - "{Customer} has {last_login_at}"
-    type: "hasProperty"
-  - id: "customer.last_name"
-    name: "last_name"
-    roles:
-    - concept: "last_name"
-    verbalizes:
-    - "{Customer} has {last_name}"
-    type: "hasProperty"
-  - id: "customer.loyalty_points_balance"
-    name: "loyalty_points_balance"
-    roles:
-    - concept: "loyalty_points_balance"
-    verbalizes:
-    - "{Customer} has {loyalty_points_balance}"
-    type: "hasProperty"
-  - id: "customer.loyalty_tier"
-    name: "loyalty_tier"
-    roles:
-    - concept: "loyalty_tier"
-    verbalizes:
-    - "{Customer} has {loyalty_tier}"
-    type: "hasProperty"
-  - id: "customer.marketing_consent"
-    name: "marketing_consent"
-    roles:
-    - concept: "marketing_consent"
-    verbalizes:
-    - "{Customer} has {marketing_consent}"
-    type: "hasProperty"
-  - id: "customer.preferred_language"
-    name: "preferred_language"
-    roles:
-    - concept: "preferred_language"
-    verbalizes:
-    - "{Customer} has {preferred_language}"
-    type: "hasProperty"
-  - id: "customer.registered_at"
-    name: "registered_at"
-    roles:
-    - concept: "registered_at"
-    verbalizes:
-    - "{Customer} has {registered_at}"
-    type: "hasProperty"
-  - id: "customer_places_order"
-    name: "places"
-    description: "A customer places one or more orders."
-    roles:
-    - concept: "Order"
-      role_name: "order"
-    multiplicity: "OneToMany"
-    verbalizes:
-    - "{Customer} places {Order}"
 - concept: "Line Item"
   id: "line_item"
   type: "EntityType"
@@ -498,7 +650,7 @@ ontology:
 - concept: "Order"
   id: "order"
   type: "EntityType"
-  description: "A confirmed purchase placed by a customer in the online shop. A cancelled order keeps its number."
+  description: "A confirmed purchase placed by a customer in the online shop."
   iri: "http://www.entropy-data.com/ns/main/Order"
   group: "sales"
   ai_context:
@@ -591,7 +743,7 @@ ontology:
   type: "EntityType"
   description: "A postal address used for invoicing or delivery."
   iri: "http://www.entropy-data.com/ns/main/PostalAddress"
-  group: "customers"
+  group: "sales"
   custom_properties:
     owl:equivalentClass: "http://schema.org/PostalAddress"
     name@de: "Adresse"
@@ -751,7 +903,7 @@ ontology:
   type: "EntityType"
   description: "A postal address designated as the delivery destination for a shipment. Sub-type of Postal Address."
   iri: "http://www.entropy-data.com/ns/main/ShippingAddress"
-  group: "customers"
+  group: "sales"
   extends:
   - "Postal Address"
   custom_properties:
@@ -991,8 +1143,23 @@ ontology:
     name@fr: "Code d'accès"
     description@de: "Optionaler Gebäude- oder Torzugangscode, der für die Lieferung erforderlich ist."
     description@fr: "Code d'accès au bâtiment ou au portail requis pour la livraison (optionnel)."
+- concept: "account_number"
+  id: "b2b_customer.account-number"
+  type: "ValueType"
+  description: "The account number of a B2B customer, assigned when the business account is approved. Printed on every invoice."
+  extends:
+  - "String"
+  classification: "Internal"
+  examples:
+  - "B2B-004711"
+  pattern: "^B2B-[0-9]{6}$"
+  custom_properties:
+    name@de: "Kontonummer"
+    name@fr: "Numéro de compte"
+    description@de: "Die Kontonummer eines B2B-Kunden, vergeben bei der Freischaltung des Geschäftskontos. Steht auf jeder Rechnung."
+    description@fr: "Le numéro de compte d'un client B2B, attribué à l'approbation du compte professionnel. Figure sur chaque facture."
 - concept: "account_status"
-  id: "customer.account-status"
+  id: "b2c_customer.account-status"
   type: "ValueType"
   description: "Lifecycle state of the customer account."
   extends:
@@ -1092,7 +1259,7 @@ ontology:
 - concept: "company_name"
   id: "billing_address.company-name"
   type: "ValueType"
-  description: "Legal company name appearing on the invoice for B2B customers."
+  description: "Company name printed on the invoice for orders by B2B customers. Usually the customer's legal name, optionally with a department or cost centre."
   extends:
   - "String"
   classification: "Restricted"
@@ -1101,8 +1268,26 @@ ontology:
   custom_properties:
     name@de: "Firmenname"
     name@fr: "Raison sociale"
-    description@de: "Rechtlicher Firmenname, der auf der Rechnung für B2B-Kunden erscheint."
-    description@fr: "Raison sociale apparaissant sur la facture pour les clients B2B."
+    description@de: "Firmenname, der auf der Rechnung für Bestellungen von B2B-Kunden erscheint. In der Regel die Firmierung des Kunden, optional mit Abteilung oder Kostenstelle."
+    description@fr: "Nom de l'entreprise figurant sur la facture des commandes de clients B2B. Généralement la dénomination sociale du client, éventuellement complétée d'un service ou d'un centre de coûts."
+- concept: "company_size"
+  id: "b2b_customer.company-size"
+  type: "ValueType"
+  description: "Size class of the company per the EU SME definition, based on headcount and annual turnover."
+  extends:
+  - "String"
+  examples:
+  - "medium"
+  enum:
+  - "micro"
+  - "small"
+  - "medium"
+  - "large"
+  custom_properties:
+    name@de: "Unternehmensgröße"
+    name@fr: "Taille de l'entreprise"
+    description@de: "Größenklasse des Unternehmens nach der KMU-Definition der EU, basierend auf Mitarbeiterzahl und Jahresumsatz."
+    description@fr: "Catégorie de taille de l'entreprise selon la définition européenne des PME, fondée sur l'effectif et le chiffre d'affaires annuel."
 - concept: "country"
   id: "postal_address.country"
   type: "ValueType"
@@ -1118,6 +1303,20 @@ ontology:
     name@fr: "Pays"
     description@de: "ISO 3166-1 alpha-2 Ländercode."
     description@fr: "Code pays ISO 3166-1 alpha-2."
+- concept: "credit_limit"
+  id: "b2b_customer.credit-limit"
+  type: "ValueType"
+  description: "Maximum open invoice amount in EUR the customer may carry before new orders are held for credit review."
+  extends:
+  - "Decimal"
+  classification: "Confidential"
+  examples:
+  - "25000.00"
+  custom_properties:
+    name@de: "Kreditlimit"
+    name@fr: "Limite de crédit"
+    description@de: "Maximaler Betrag offener Rechnungen in EUR, bevor neue Bestellungen zur Bonitätsprüfung angehalten werden."
+    description@fr: "Montant maximal de factures ouvertes en EUR avant que les nouvelles commandes ne soient bloquées pour contrôle de crédit."
 - concept: "currency"
   id: "order.currency"
   type: "ValueType"
@@ -1134,9 +1333,9 @@ ontology:
     description@de: "ISO 4217 Währungscode der Bestellsumme."
     description@fr: "Code de devise ISO 4217 du total de la commande."
 - concept: "customer_type"
-  id: "customer.customer-type"
+  id: "b2c_customer.customer-type"
   type: "ValueType"
-  description: "Whether the order was placed as a guest checkout or by a registered customer."
+  description: "Whether the B2C customer shops as a guest or with a registered account."
   extends:
   - "String"
   examples:
@@ -1147,10 +1346,10 @@ ontology:
   custom_properties:
     name@de: "Kundentyp"
     name@fr: "Type de client"
-    description@de: "Ob die Bestellung als Gastbestellung oder durch einen registrierten Kunden aufgegeben wurde."
-    description@fr: "Indique si la commande a été passée en tant qu'invité ou par un client enregistré."
+    description@de: "Ob der B2C-Kunde als Gast oder mit einem registrierten Konto einkauft."
+    description@fr: "Indique si le client B2C achète en tant qu'invité ou avec un compte enregistré."
 - concept: "date_of_birth"
-  id: "customer.date-of-birth"
+  id: "b2c_customer.date-of-birth"
   type: "ValueType"
   description: "The customer's date of birth. Used for age verification on restricted articles."
   extends:
@@ -1216,8 +1415,23 @@ ontology:
     name@fr: "Date d'expédition"
     description@de: "Der Zeitstempel, zu dem die Sendung an den Versanddienstleister übergeben wurde."
     description@fr: "L'horodatage auquel l'expédition a été remise au transporteur."
+- concept: "duns_number"
+  id: "b2b_customer.duns-number"
+  type: "ValueType"
+  description: "Nine-digit D-U-N-S Number from Dun & Bradstreet. Used to match the company across systems and for credit checks."
+  extends:
+  - "String"
+  classification: "Internal"
+  examples:
+  - "150483782"
+  pattern: "^[0-9]{9}$"
+  custom_properties:
+    name@de: "D-U-N-S-Nummer"
+    name@fr: "Numéro D-U-N-S"
+    description@de: "Neunstellige D-U-N-S-Nummer von Dun & Bradstreet. Dient zum Abgleich des Unternehmens über Systeme hinweg und für Bonitätsprüfungen."
+    description@fr: "Numéro D-U-N-S à neuf chiffres de Dun & Bradstreet. Sert à rapprocher l'entreprise entre les systèmes et aux contrôles de solvabilité."
 - concept: "first_name"
-  id: "customer.first-name"
+  id: "b2c_customer.first-name"
   type: "ValueType"
   description: "Given name as provided at registration."
   extends:
@@ -1232,7 +1446,7 @@ ontology:
     description@de: "Vorname, wie bei der Registrierung angegeben."
     description@fr: "Prénom fourni lors de l'enregistrement."
 - concept: "gender"
-  id: "customer.gender"
+  id: "b2c_customer.gender"
   type: "ValueType"
   description: "Self-declared gender. Optional at registration."
   extends:
@@ -1264,8 +1478,38 @@ ontology:
     name@fr: "GTIN"
     description@de: "Global Trade Item Number (EAN/UPC), die auf dem Barcode des Artikels codiert ist."
     description@fr: "Global Trade Item Number (EAN/UPC) encodée sur le code-barres de l'article."
+- concept: "industry_code"
+  id: "b2b_customer.industry-code"
+  type: "ValueType"
+  description: "NACE Rev. 2 code of the company's main economic activity."
+  extends:
+  - "String"
+  examples:
+  - "47.91"
+  - "62.01"
+  pattern: "^[0-9]{2}(\\.[0-9]{1,2})?$"
+  custom_properties:
+    name@de: "Branchencode"
+    name@fr: "Code d'activité"
+    description@de: "NACE-Rev.-2-Code der wirtschaftlichen Haupttätigkeit des Unternehmens."
+    description@fr: "Code NACE Rév. 2 de l'activité économique principale de l'entreprise."
+- concept: "invoice_email"
+  id: "b2b_customer.invoice-email"
+  type: "ValueType"
+  description: "Email address of the customer's accounts payable department, where invoices and payment reminders are sent."
+  extends:
+  - "String"
+  classification: "Internal"
+  examples:
+  - "invoices@acme.example"
+  pattern: "^.*@.*$"
+  custom_properties:
+    name@de: "Rechnungs-E-Mail"
+    name@fr: "E-mail de facturation"
+    description@de: "E-Mail-Adresse der Kreditorenbuchhaltung des Kunden, an die Rechnungen und Zahlungserinnerungen gehen."
+    description@fr: "Adresse e-mail du service comptabilité fournisseurs du client, à laquelle sont envoyées les factures et les relances."
 - concept: "last_login_at"
-  id: "customer.last-login-at"
+  id: "b2c_customer.last-login-at"
   type: "ValueType"
   description: "Timestamp of the customer's most recent authenticated session."
   extends:
@@ -1279,7 +1523,7 @@ ontology:
     description@de: "Zeitstempel der letzten authentifizierten Sitzung des Kunden."
     description@fr: "Horodatage de la dernière session authentifiée du client."
 - concept: "last_name"
-  id: "customer.last-name"
+  id: "b2c_customer.last-name"
   type: "ValueType"
   description: "Family name as provided at registration."
   extends:
@@ -1293,6 +1537,21 @@ ontology:
     name@fr: "Nom"
     description@de: "Nachname, wie bei der Registrierung angegeben."
     description@fr: "Nom de famille fourni lors de l'enregistrement."
+- concept: "legal_name"
+  id: "b2b_customer.legal-name"
+  type: "ValueType"
+  description: "Registered legal name of the company, including its legal form, as entered in the commercial register."
+  extends:
+  - "String"
+  classification: "Internal"
+  examples:
+  - "Acme GmbH"
+  - "Globex Corporation"
+  custom_properties:
+    name@de: "Firmierung"
+    name@fr: "Dénomination sociale"
+    description@de: "Eingetragener rechtlicher Name des Unternehmens einschließlich Rechtsform, wie im Handelsregister vermerkt."
+    description@fr: "Nom légal enregistré de l'entreprise, forme juridique comprise, tel qu'inscrit au registre du commerce."
 - concept: "line_number"
   id: "line_item.line-number"
   type: "ValueType"
@@ -1334,7 +1593,7 @@ ontology:
     description@de: "Variantenspezifischer Listenpreis vor Rabatten."
     description@fr: "Prix catalogue spécifique à la variante avant remises."
 - concept: "loyalty_points_balance"
-  id: "customer.loyalty-points-balance"
+  id: "b2c_customer.loyalty-points-balance"
   type: "ValueType"
   description: "Current redeemable loyalty points balance."
   extends:
@@ -1348,7 +1607,7 @@ ontology:
     description@de: "Aktuelles einlösbares Treuepunkte-Guthaben."
     description@fr: "Solde actuel de points de fidélité échangeables."
 - concept: "loyalty_tier"
-  id: "customer.loyalty-tier"
+  id: "b2c_customer.loyalty-tier"
   type: "ValueType"
   description: "Loyalty program segment assigned based on rolling 12-month spend."
   extends:
@@ -1368,7 +1627,7 @@ ontology:
     description@de: "Segment des Treueprogramms, basierend auf den Ausgaben der rollierenden letzten 12 Monate."
     description@fr: "Segment du programme de fidélité attribué en fonction des dépenses sur 12 mois glissants."
 - concept: "marketing_consent"
-  id: "customer.marketing-consent"
+  id: "b2c_customer.marketing-consent"
   type: "ValueType"
   description: "Whether the customer has opted in to marketing communications (GDPR Art. 6(1)(a))."
   extends:
@@ -1381,6 +1640,19 @@ ontology:
     name@fr: "Consentement marketing"
     description@de: "Ob der Kunde Marketingkommunikation zugestimmt hat (DSGVO Art. 6 Abs. 1 lit. a)."
     description@fr: "Indique si le client a consenti aux communications marketing (RGPD Art. 6(1)(a))."
+- concept: "onboarded_at"
+  id: "b2b_customer.onboarded-at"
+  type: "ValueType"
+  description: "Timestamp when the business account was approved after the company verification (KYB) check."
+  extends:
+  - "DateTime"
+  examples:
+  - "2023-02-06T14:05:12Z"
+  custom_properties:
+    name@de: "Freischaltungszeitpunkt"
+    name@fr: "Date d'activation"
+    description@de: "Zeitstempel, zu dem das Geschäftskonto nach der Unternehmensprüfung (KYB) freigeschaltet wurde."
+    description@fr: "Horodatage d'approbation du compte professionnel après la vérification de l'entreprise (KYB)."
 - concept: "order_status"
   id: "order.order-status"
   type: "ValueType"
@@ -1402,6 +1674,25 @@ ontology:
     name@fr: "Statut de la commande"
     description@de: "Lebenszyklusstatus der Bestellung. Eine Bestellung, die nie versandt wurde, ist storniert; eine versandte und zurückgesandte ist retourniert, ganz oder teilweise."
     description@fr: "État du cycle de vie de la commande."
+- concept: "payment_terms"
+  id: "b2b_customer.payment-terms"
+  type: "ValueType"
+  description: "Agreed payment terms for invoices, either prepayment or payment due within the given number of days."
+  extends:
+  - "String"
+  classification: "Internal"
+  examples:
+  - "net_30"
+  enum:
+  - "prepayment"
+  - "net_14"
+  - "net_30"
+  - "net_60"
+  custom_properties:
+    name@de: "Zahlungsbedingungen"
+    name@fr: "Conditions de paiement"
+    description@de: "Vereinbarte Zahlungsbedingungen für Rechnungen, entweder Vorkasse oder Zahlung innerhalb der angegebenen Anzahl von Tagen."
+    description@fr: "Conditions de paiement convenues pour les factures, soit un prépaiement, soit un paiement dans le nombre de jours indiqué."
 - concept: "placed_at"
   id: "order.placed-at"
   type: "ValueType"
@@ -1427,7 +1718,7 @@ ontology:
     name@de: "Postleitzahl"
     name@fr: "Code postal"
 - concept: "preferred_language"
-  id: "customer.preferred-language"
+  id: "b2c_customer.preferred-language"
   type: "ValueType"
   description: "IETF BCP 47 language tag used for communications and storefront localization."
   extends:
@@ -1455,6 +1746,19 @@ ontology:
     name@fr: "ID du produit"
     description@de: "Interne eindeutige Kennung für das Katalogprodukt."
     description@fr: "Identifiant interne unique du produit catalogue."
+- concept: "purchase_order_required"
+  id: "b2b_customer.purchase-order-required"
+  type: "ValueType"
+  description: "Whether every order must carry the customer's purchase order number, which is then printed on the invoice."
+  extends:
+  - "Boolean"
+  examples:
+  - "true"
+  custom_properties:
+    name@de: "Bestellnummer erforderlich"
+    name@fr: "Bon de commande obligatoire"
+    description@de: "Ob jede Bestellung die Bestellnummer des Kunden tragen muss, die dann auf der Rechnung erscheint."
+    description@fr: "Indique si chaque commande doit porter le numéro de bon de commande du client, qui figure ensuite sur la facture."
 - concept: "quantity"
   id: "line_item.quantity"
   type: "ValueType"
@@ -1469,7 +1773,7 @@ ontology:
     description@de: "Anzahl der in dieser Position gekauften Einheiten des Artikels."
     description@fr: "Nombre d'unités de l'article achetées sur cette ligne."
 - concept: "registered_at"
-  id: "customer.registered-at"
+  id: "b2c_customer.registered-at"
   type: "ValueType"
   description: "Timestamp when the customer account was created."
   extends:
@@ -1537,7 +1841,7 @@ ontology:
 - concept: "total_amount"
   id: "order.total-amount"
   type: "ValueType"
-  description: "Order total in the customer's transaction currency, net of VAT."
+  description: "Order total in the customer's transaction currency."
   extends:
   - "Decimal"
   examples:
@@ -1573,18 +1877,3 @@ ontology:
     name@fr: "Prix unitaire"
     description@de: "Preis pro Einheit zum Zeitpunkt des Kaufs, in der Bestellwährung."
     description@fr: "Prix par unité au moment de l'achat, dans la devise de la commande."
-- concept: "vat_id"
-  id: "billing_address.vat-id"
-  type: "ValueType"
-  description: "VAT identification number provided for business invoices (EU VIES format)."
-  extends:
-  - "String"
-  classification: "Restricted"
-  examples:
-  - "DE123456789"
-  pattern: "^[A-Z]{2}[A-Z0-9]{2,12}$"
-  custom_properties:
-    name@de: "Umsatzsteuer-ID"
-    name@fr: "Numéro de TVA"
-    description@de: "Umsatzsteuer-Identifikationsnummer für Geschäftsrechnungen (EU-VIES-Format)."
-    description@fr: "Numéro d'identification à la TVA fourni pour les factures professionnelles (format VIES UE)."
