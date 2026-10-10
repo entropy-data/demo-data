@@ -77,6 +77,19 @@ ontology:
     name@fr: "Champs techniques"
     description@de: "Metadatenfelder der Datenpipeline, die in vielen Tabellen vorkommen, wie z. B. Zeitstempel für Ingestion und Verarbeitung."
     description@fr: "Champs de métadonnées du pipeline de données communs à de nombreuses tables, tels que les horodatages d'ingestion et de traitement."
+- concept: "Campaign ID"
+  id: "campaign_id"
+  type: "ValueType"
+  shared: true
+  description: "The identifier of a marketing campaign in the marketing automation platform. Links campaign sends and website clicks to the campaign."
+  extends:
+  - "String"
+  classification: "Internal"
+  custom_properties:
+    name@de: "Kampagnen-ID"
+    name@fr: "ID de campagne"
+    description@de: "Die Kennung einer Marketingkampagne in der Marketing-Automation-Plattform. Verknüpft Kampagnenversand und Website-Klicks mit der Kampagne."
+    description@fr: "L'identifiant d'une campagne marketing dans la plateforme d'automatisation marketing. Relie les envois et les clics sur le site web à la campagne."
 - concept: "Customer Email"
   id: "customer_email"
   type: "ValueType"
@@ -135,6 +148,20 @@ ontology:
     description@fr: |-
       L'horodatage auquel l'enregistrement source sous-jacent a été mis à jour pour la dernière fois.
       Reflète l'heure du changement métier telle que rapportée par le système source, et non le moment où l'enregistrement a été observé ou chargé dans le produit de données.
+- concept: "Line Item ID"
+  id: "line_item_id"
+  type: "ValueType"
+  shared: true
+  description: "The unique identifier of a single line within an order."
+  group: "sales"
+  extends:
+  - "String"
+  classification: "Internal"
+  custom_properties:
+    name@de: "Positions-ID"
+    name@fr: "ID de ligne de commande"
+    description@de: "Die eindeutige Kennung einer einzelnen Position innerhalb einer Bestellung."
+    description@fr: "L'identifiant unique d'une ligne individuelle au sein d'une commande."
 - concept: "Order ID"
   id: "order_id"
   type: "ValueType"
@@ -152,6 +179,20 @@ ontology:
     name@fr: "ID de commande"
     description@de: "Die dem Benutzer angezeigte ID, die eine Bestellung im Online-Shop identifiziert. Wird auch für Support-Anfragen verwendet."
     description@fr: "L'identifiant visible par l'utilisateur qui identifie une commande dans la boutique en ligne. Également utilisé pour les demandes d'assistance."
+- concept: "Phone Number"
+  id: "phone_number"
+  type: "ValueType"
+  shared: true
+  description: "The phone number under which a B2C customer can be reached, for example for delivery or service questions."
+  group: "b2c"
+  extends:
+  - "String"
+  classification: "Restricted"
+  custom_properties:
+    name@de: "Telefonnummer"
+    name@fr: "Numéro de téléphone"
+    description@de: "Die Telefonnummer, unter der ein B2C-Kunde erreichbar ist, zum Beispiel für Fragen zur Lieferung oder zum Service."
+    description@fr: "Le numéro de téléphone auquel un client B2C peut être joint, par exemple pour des questions de livraison ou de service."
 - concept: "Process Timestamp"
   id: "processed_timestamp"
   type: "ValueType"
@@ -526,6 +567,13 @@ ontology:
     verbalizes:
     - "{B2C Customer} has {last_login_at}"
     type: "hasProperty"
+  - id: "b2c_customer.phone_number"
+    name: "phone_number"
+    roles:
+    - concept: "Phone Number"
+    verbalizes:
+    - "{B2C Customer} has {Phone Number}"
+    type: "hasProperty"
   - id: "b2c_customer_places_order"
     name: "places"
     description: "A B2C customer places one or more orders."
@@ -571,6 +619,31 @@ ontology:
     verbalizes:
     - "{Billing Address} has {company_name}"
     type: "hasProperty"
+- concept: "Campaign"
+  id: "campaign"
+  type: "EntityType"
+  description: "A marketing campaign that sends messages to customers and drives traffic to the online shop."
+  custom_properties:
+    name@de: "Kampagne"
+    name@fr: "Campagne"
+    description@de: "Eine Marketingkampagne, die Nachrichten an Kunden versendet und Besucher in den Online-Shop bringt."
+    description@fr: "Une campagne marketing qui envoie des messages aux clients et génère du trafic vers la boutique en ligne."
+  relationships:
+  - id: "campaign.campaign_id"
+    name: "campaign_id"
+    roles:
+    - concept: "Campaign ID"
+    verbalizes:
+    - "{Campaign} has {Campaign ID}"
+    type: "hasProperty"
+  - id: "campaign_targets_b2c_customer"
+    name: "targets"
+    description: "A campaign is sent to many B2C customers who agreed to receive marketing messages."
+    roles:
+    - concept: "B2C Customer"
+    multiplicity: "OneToMany"
+    verbalizes:
+    - "{Campaign} targets {B2C Customer}"
 - concept: "Line Item"
   id: "line_item"
   type: "EntityType"
@@ -638,6 +711,13 @@ ontology:
     - concept: "line_total"
     verbalizes:
     - "{Line Item} has {line_total}"
+    type: "hasProperty"
+  - id: "line_item.line_item_id"
+    name: "line_item_id"
+    roles:
+    - concept: "Line Item ID"
+    verbalizes:
+    - "{Line Item} has {Line Item ID}"
     type: "hasProperty"
   - id: "line_item_references_article"
     name: "references"
@@ -722,6 +802,15 @@ ontology:
     multiplicity: "OneToMany"
     verbalizes:
     - "{Order} contains {Line Item}"
+  - id: "order_follows_up_order"
+    name: "follows_up"
+    description: "An order that customer service creates to replace a cancelled order follows up that previous order."
+    roles:
+    - concept: "Order"
+      role_name: "previous"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Order} follows up {Order}"
   - id: "order_fulfilled_by_shipment"
     name: "fulfilled_by"
     description: "An order is fulfilled by one or more shipments."
@@ -1268,13 +1357,17 @@ ontology:
 - concept: "city"
   id: "postal_address.city"
   type: "ValueType"
+  description: "The city or town of a postal address."
   extends:
   - "String"
+  classification: "Restricted"
   examples:
   - "München"
   custom_properties:
     name@de: "Stadt"
     name@fr: "Ville"
+    description@de: "Die Stadt oder Gemeinde einer Postadresse."
+    description@fr: "La ville ou la commune d'une adresse postale."
 - concept: "color"
   id: "article.color"
   type: "ValueType"
@@ -1742,6 +1835,7 @@ ontology:
 - concept: "postal_code"
   id: "postal_address.postal_code"
   type: "ValueType"
+  description: "The postal code that, together with the city, identifies the delivery area of a postal address."
   extends:
   - "String"
   classification: "Restricted"
@@ -1750,6 +1844,8 @@ ontology:
   custom_properties:
     name@de: "Postleitzahl"
     name@fr: "Code postal"
+    description@de: "Die Postleitzahl, die zusammen mit der Stadt das Zustellgebiet einer Postadresse bestimmt."
+    description@fr: "Le code postal qui, avec la ville, identifie la zone de distribution d'une adresse postale."
 - concept: "preferred_language"
   id: "b2c_customer.preferred-language"
   type: "ValueType"
@@ -1837,6 +1933,7 @@ ontology:
 - concept: "street"
   id: "postal_address.street"
   type: "ValueType"
+  description: "The street name and house number of a postal address."
   extends:
   - "String"
   classification: "Restricted"
@@ -1845,6 +1942,8 @@ ontology:
   custom_properties:
     name@de: "Straße"
     name@fr: "Rue"
+    description@de: "Straßenname und Hausnummer einer Postadresse."
+    description@fr: "Nom de la rue et numéro de la maison d'une adresse postale."
 - concept: "tax_rate"
   id: "line_item.tax-rate"
   type: "ValueType"
