@@ -382,6 +382,9 @@ schema:
         authoritativeDefinitions:
           - type: "semantics"
             url: "https://demo.entropy-data.com/demo370016714030/semantics/global/order.placed-at"
+      - name: "order_total_in_yen"
+        logicalType: "number"
+        description: "We always need the currency in YEN because china is getting more important."
   - name: "LINE_ITEMS"
     physicalType: "table"
     businessName: "Line Items"
