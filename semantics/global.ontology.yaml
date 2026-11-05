@@ -937,7 +937,6 @@ ontology:
     The typical amount a customer spends per order. A core commerce KPI used to
     gauge pricing, bundling, and cross-sell effectiveness.
   iri: "http://www.entropy-data.com/ns/main/AverageOrderValue"
-  group: "sales"
   unit: "EUR"
   better_when: "higher"
   formula: "SUM(order.total_amount) / COUNT(DISTINCT order.id)"
