@@ -160,7 +160,6 @@ ontology:
     The timestamp at which the record was processed by the data pipeline.
     Useful for debugging ingestion lag and reproducing the state of the data product at a given point in time.
   iri: "http://www.entropy-data.com/ns/main/processedTimestamp"
-  group: "technical_fields"
   extends:
   - "DateTime"
   classification: "Internal"
