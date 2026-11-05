@@ -1149,7 +1149,6 @@ ontology:
     Average time between an order being placed and the first shipment leaving the
     warehouse. A core fulfillment KPI. Lower is better.
   iri: "http://www.entropy-data.com/ns/main/OrderFulfillmentTime"
-  group: "fulfillment"
   unit: "hours"
   better_when: "lower"
   formula: "AVG(shipment.dispatched_at - order.placed_at)"
