@@ -160,6 +160,7 @@ ontology:
     The timestamp at which the record was processed by the data pipeline.
     Useful for debugging ingestion lag and reproducing the state of the data product at a given point in time.
   iri: "http://www.entropy-data.com/ns/main/processedTimestamp"
+  group: "technical_fields"
   extends:
   - "DateTime"
   classification: "Internal"
@@ -925,6 +926,10 @@ ontology:
     verbalizes:
     - "{Shipping Address} has {access_code}"
     type: "hasProperty"
+- concept: "Smoke Branch Entity"
+  id: "smoke_branch_entity"
+  type: "EntityType"
+  status: "active"
 - concept: "Average Order Value"
   id: "average_order_value"
   type: "MetricType"
