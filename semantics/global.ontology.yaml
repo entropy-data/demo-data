@@ -929,7 +929,7 @@ ontology:
 - concept: "Smoke Branch Entity"
   id: "smoke_branch_entity"
   type: "EntityType"
-  status: "active"
+  description: "Branch YAML."
 - concept: "Average Order Value"
   id: "average_order_value"
   type: "MetricType"
