@@ -120,6 +120,7 @@ ontology:
     The timestamp at which the underlying source record was last updated.
     Reflects the business change time as reported by the source system, not when the record was observed or loaded into the data product.
   iri: "http://www.entropy-data.com/ns/main/actualTimestamp"
+  group: "technical_fields"
   extends:
   - "DateTime"
   classification: "Internal"
@@ -925,6 +926,10 @@ ontology:
     verbalizes:
     - "{Shipping Address} has {access_code}"
     type: "hasProperty"
+- concept: "Smoke Branch Entity"
+  id: "smoke_branch_entity"
+  type: "EntityType"
+  status: "active"
 - concept: "Average Order Value"
   id: "average_order_value"
   type: "MetricType"
