@@ -1,7 +1,7 @@
 version: "0.2.0.dev0"
 name: "global"
 description: |-
-  Core business semantics for the demo retail organization.
+  Core business semantics (review test) for the demo retail organization.
   Shared properties were migrated from the legacy /definitions catalogue.
 custom_properties:
   display_name: "Global"
