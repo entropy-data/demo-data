@@ -647,6 +647,11 @@ ontology:
     multiplicity: "ManyToOne"
     verbalizes:
     - "{Line Item} references {Article}"
+- concept: "New Concept"
+  id: "new-concept"
+  type: "EntityType"
+  status: "active"
+  owner: "governance-group"
 - concept: "Order"
   id: "order"
   type: "EntityType"
