@@ -308,31 +308,6 @@ schema:
             authoritativeDefinitions:
               - type: "semantics"
                 url: "https://demo.entropy-data.com/demo590554743376/semantics/global/postal_address.city"
-      - name: "ORDER_DATE"
-        logicalType: "timestamp"
-        description: "Timestamp the order was placed, in UTC."
-        businessName: "Order Date"
-        required: true
-        quality:
-          - name: "Order Date Not Null"
-            type: "library"
-            metric: "nullValues"
-            mustBe: 0
-            unit: "rows"
-            description: "Order date must never be null."
-            dimension: "completeness"
-            severity: "error"
-          - name: "Order Date In Expected Range"
-            type: "sql"
-            mustBe: 0
-            unit: "rows"
-            description: "Order date must not be before 2020-01-01 and must not lie in the future."
-            dimension: "accuracy"
-            severity: "error"
-            query: |
-              SELECT COUNT(*)
-              FROM {object}
-              WHERE {property} < '2020-01-01' OR {property} > CURRENT_TIMESTAMP()
       - name: "ORDER_TOTAL"
         logicalType: "number"
         physicalType: "number"
@@ -380,6 +355,13 @@ schema:
             businessImpact: "financial"
             query: |
               SELECT AVG({property}) FROM {object}
+          - type: "custom"
+            engine: "datacontract-cli"
+            implementation:
+              check: "between"
+              arguments:
+                min: 0
+                max: 10000000
   - name: "LINE_ITEMS"
     physicalType: "table"
     businessName: "Line Items"
