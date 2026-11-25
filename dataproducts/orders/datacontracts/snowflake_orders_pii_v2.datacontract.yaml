@@ -203,40 +203,6 @@ schema:
         authoritativeDefinitions:
           - type: "semantics"
             url: "https://demo.entropy-data.com/demo118395547578/semantics/global/customer_id"
-      - name: "EMAIL"
-        logicalType: "string"
-        quality:
-          - name: "Email Format"
-            type: "library"
-            metric: "invalidValues"
-            mustBe: 0
-            arguments:
-              pattern: "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
-            unit: "rows"
-            description: "Email must be a syntactically valid address."
-            dimension: "conformity"
-            severity: "error"
-          - name: "Email Stored Lowercase"
-            type: "sql"
-            mustBe: 0
-            unit: "rows"
-            description: "Emails must be stored lowercase so they can be matched across systems."
-            dimension: "conformity"
-            severity: "warning"
-            query: |
-              SELECT COUNT(*) FROM {object} WHERE {property} <> LOWER({property})
-          - name: "Email Coverage"
-            type: "sql"
-            mustBeGreaterOrEqualTo: 95
-            unit: "percent"
-            description: "At least 95% of orders must carry an email address."
-            dimension: "coverage"
-            severity: "warning"
-            query: |
-              SELECT 100.0 * COUNT({property}) / NULLIF(COUNT(*), 0) FROM {object}
-        authoritativeDefinitions:
-          - type: "semantics"
-            url: "https://demo.entropy-data.com/demo118395547578/semantics/global/customer_email"
       - name: "PHONE_NUMBER"
         logicalType: "string"
         physicalType: "text"
