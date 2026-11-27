@@ -1,0 +1,2245 @@
+version: "0.3.0.dev0"
+name: "global"
+description: "Core business semantics for the demo retail organization."
+annotations:
+  ed:display_name: "Global"
+  ed:owner: "governance-group"
+prefixes:
+  ed: "http://entropy-data.com/ns/ed#"
+ontology:
+- concept: "B2B"
+  type: "EntityType"
+  description: "Companies and public institutions that buy for their business, on invoice and under negotiated payment terms."
+  iri: "http://entropy-data.com/ontologies/global/B2B"
+  annotations:
+    ed:label: "B2B"
+    ed:label@de: "B2B"
+    ed:label@fr: "B2B"
+    ed:entity_type: "GroupType"
+    ed:description@de: "Unternehmen und öffentliche Einrichtungen, die für den geschäftlichen Bedarf einkaufen, auf Rechnung und zu vereinbarten Zahlungsbedingungen."
+    ed:description@fr: "Entreprises et organismes publics qui achètent pour leurs besoins professionnels, sur facture et selon des conditions de paiement négociées."
+- concept: "B2C"
+  type: "EntityType"
+  description: "Private consumers who buy for personal use, with a registered account or as guests."
+  iri: "http://entropy-data.com/ontologies/global/B2C"
+  annotations:
+    ed:label: "B2C"
+    ed:label@de: "B2C"
+    ed:label@fr: "B2C"
+    ed:entity_type: "GroupType"
+    ed:description@de: "Privatkunden, die für den persönlichen Bedarf einkaufen, mit registriertem Konto oder als Gast."
+    ed:description@fr: "Particuliers qui achètent pour un usage personnel, avec un compte enregistré ou en tant qu'invités."
+- concept: "Catalog"
+  type: "EntityType"
+  description: "Products, orderable article variants, and brands offered for sale."
+  iri: "http://entropy-data.com/ontologies/global/Catalog"
+  annotations:
+    ed:label: "Catalog"
+    ed:label@de: "Katalog"
+    ed:label@fr: "Catalogue"
+    ed:entity_type: "GroupType"
+    ed:description@de: "Produkte, bestellbare Artikelvarianten und Marken, die zum Verkauf angeboten werden."
+    ed:description@fr: "Produits, variantes d'articles commandables et marques proposés à la vente."
+- concept: "Controlling"
+  type: "EntityType"
+  description: "Financial KPIs and commercial performance metrics."
+  iri: "http://entropy-data.com/ontologies/global/Controlling"
+  annotations:
+    ed:label: "Controlling"
+    ed:label@de: "Controlling"
+    ed:label@fr: "Contrôle de gestion"
+    ed:entity_type: "GroupType"
+    ed:description@de: "Finanzkennzahlen und kommerzielle Leistungsindikatoren."
+    ed:description@fr: "Indicateurs financiers et mesures de performance commerciale."
+- concept: "Fulfillment"
+  type: "EntityType"
+  description: "Inventory, picking, packing, and shipment of orders."
+  iri: "http://entropy-data.com/ontologies/global/Fulfillment"
+  annotations:
+    ed:label: "Fulfillment"
+    ed:label@de: "Auftragsabwicklung"
+    ed:label@fr: "Exécution"
+    ed:entity_type: "GroupType"
+    ed:description@de: "Bestandsverwaltung, Kommissionierung, Verpackung und Versand der Bestellungen."
+    ed:description@fr: "Gestion des stocks, préparation, emballage et expédition des commandes."
+- concept: "Sales"
+  type: "EntityType"
+  description: "Order taking, checkout, and post-sale customer service."
+  iri: "http://entropy-data.com/ontologies/global/Sales"
+  annotations:
+    ed:label: "Sales"
+    ed:label@de: "Vertrieb"
+    ed:label@fr: "Ventes"
+    ed:entity_type: "GroupType"
+    ed:description@de: "Bestellannahme, Checkout und Kundenservice nach dem Verkauf."
+    ed:description@fr: "Prise de commande, paiement et service après-vente."
+- concept: "TechnicalFields"
+  type: "EntityType"
+  description: "Data pipeline metadata fields common to many tables, such as ingestion and processing timestamps."
+  iri: "http://entropy-data.com/ontologies/global/TechnicalFields"
+  annotations:
+    ed:label: "Technical Fields"
+    ed:label@de: "Technische Felder"
+    ed:label@fr: "Champs techniques"
+    ed:entity_type: "GroupType"
+    ed:description@de: "Metadatenfelder der Datenpipeline, die in vielen Tabellen vorkommen, wie z. B. Zeitstempel für Ingestion und Verarbeitung."
+    ed:description@fr: "Champs de métadonnées du pipeline de données communs à de nombreuses tables, tels que les horodatages d'ingestion et de traitement."
+- concept: "B2C/CustomerEmail"
+  type: "ValueType"
+  description: "The email address of a B2C customer."
+  iri: "http://entropy-data.com/ontologies/global/B2C/CustomerEmail"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Customer Email"
+    ed:label@de: "Kunden-E-Mail"
+    ed:label@fr: "E-mail du client"
+    ed:shared: true
+    ed:classification: "Restricted"
+    ed:examples:
+    - "mail@example.com"
+    ed:pattern: "^.*@.*$"
+    ed:description@de: "Die E-Mail-Adresse eines B2C-Kunden."
+    ed:description@fr: "L'adresse e-mail d'un client B2C."
+  relationships:
+  - name: "member_of"
+    roles:
+    - concept: "B2C"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2C/CustomerEmail} is a member of {B2C}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "B2C/CustomerId"
+  type: "ValueType"
+  description: "The internal ID of a B2C customer in the online shop. Guest customers have a customer ID as well."
+  iri: "http://entropy-data.com/ontologies/global/B2C/CustomerId"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Customer ID"
+    ed:label@de: "Kunden-ID"
+    ed:label@fr: "ID du client"
+    ed:shared: true
+    ed:classification: "Confidential"
+    ed:examples:
+    - "c1-10123123"
+    ed:description@de: "Die interne ID eines B2C-Kunden im Online-Shop. Gastkunden haben ebenfalls eine Kunden-ID."
+    ed:description@fr: "L'identifiant interne d'un client B2C dans la boutique en ligne. Les clients invités ont également un identifiant client."
+  relationships:
+  - name: "member_of"
+    roles:
+    - concept: "B2C"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2C/CustomerId} is a member of {B2C}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "TechnicalFields/ActualTimestamp"
+  type: "ValueType"
+  description: |-
+    The timestamp at which the underlying source record was last updated.
+    Reflects the business change time as reported by the source system, not when the record was observed or loaded into the data product.
+  iri: "http://entropy-data.com/ontologies/global/TechnicalFields/ActualTimestamp"
+  extends:
+  - "DateTime"
+  annotations:
+    ed:label: "Last Updated Timestamp"
+    ed:label@de: "Zeitstempel der letzten Aktualisierung"
+    ed:label@fr: "Horodatage de la dernière mise à jour"
+    ed:shared: true
+    ed:classification: "Internal"
+    ed:examples:
+    - "2025-03-14T09:12:47Z"
+    ed:description@de: |-
+      Der Zeitstempel, zu dem der zugrunde liegende Quelldatensatz zuletzt aktualisiert wurde.
+      Spiegelt die fachliche Änderungszeit des Quellsystems wider, nicht den Zeitpunkt der Beobachtung oder Beladung im Datenprodukt.
+    ed:description@fr: |-
+      L'horodatage auquel l'enregistrement source sous-jacent a été mis à jour pour la dernière fois.
+      Reflète l'heure du changement métier telle que rapportée par le système source, et non le moment où l'enregistrement a été observé ou chargé dans le produit de données.
+  relationships:
+  - name: "member_of"
+    roles:
+    - concept: "TechnicalFields"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{TechnicalFields/ActualTimestamp} is a member of {TechnicalFields}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Sales/OrderId"
+  type: "ValueType"
+  description: "The user-facing ID that identifies an order in the online shop. Also used for support requests."
+  iri: "http://entropy-data.com/ontologies/global/Sales/OrderId"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Order ID"
+    ed:label@de: "Bestell-ID"
+    ed:label@fr: "ID de commande"
+    ed:shared: true
+    ed:classification: "Confidential"
+    ed:examples:
+    - "100-0314678"
+    ed:description@de: "Die dem Benutzer angezeigte ID, die eine Bestellung im Online-Shop identifiziert. Wird auch für Support-Anfragen verwendet."
+    ed:description@fr: "L'identifiant visible par l'utilisateur qui identifie une commande dans la boutique en ligne. Également utilisé pour les demandes d'assistance."
+  relationships:
+  - name: "member_of"
+    roles:
+    - concept: "Sales"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/OrderId} is a member of {Sales}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "TechnicalFields/ProcessedTimestamp"
+  type: "ValueType"
+  description: |-
+    The timestamp at which the record was processed by the data pipeline.
+    Useful for debugging ingestion lag and reproducing the state of the data product at a given point in time.
+  iri: "http://entropy-data.com/ontologies/global/TechnicalFields/ProcessedTimestamp"
+  extends:
+  - "DateTime"
+  annotations:
+    ed:label: "Process Timestamp"
+    ed:label@de: "Verarbeitungszeitstempel"
+    ed:label@fr: "Horodatage de traitement"
+    ed:shared: true
+    ed:classification: "Internal"
+    ed:examples:
+    - "2025-03-14T09:15:02Z"
+    ed:description@de: |-
+      Der Zeitstempel, zu dem der Datensatz von der Datenpipeline verarbeitet wurde.
+      Nützlich zum Debuggen von Ingestion-Verzögerungen und zur Reproduktion des Zustands des Datenprodukts zu einem bestimmten Zeitpunkt.
+    ed:description@fr: |-
+      L'horodatage auquel l'enregistrement a été traité par le pipeline de données.
+      Utile pour déboguer le délai d'ingestion et reproduire l'état du produit de données à un moment donné.
+  relationships:
+  - name: "member_of"
+    roles:
+    - concept: "TechnicalFields"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{TechnicalFields/ProcessedTimestamp} is a member of {TechnicalFields}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Fulfillment/ShipmentId"
+  type: "ValueType"
+  description: |-
+    A Shipment ID is an internal unique identifier for a shipment.
+    It is typically associated with a shipment's tracking number.
+  iri: "http://entropy-data.com/ontologies/global/Fulfillment/ShipmentId"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Shipment ID"
+    ed:label@de: "Versand-ID"
+    ed:label@fr: "ID d'expédition"
+    ed:shared: true
+    ed:classification: "Internal"
+    ed:examples:
+    - "123e4567-e89b-12d3-a456-426614174000"
+    ed:description@de: |-
+      Eine Versand-ID ist eine interne eindeutige Kennung für eine Sendung.
+      Sie ist typischerweise mit der Tracking-Nummer einer Sendung verknüpft.
+    ed:description@fr: |-
+      Un ID d'expédition est un identifiant interne unique pour une expédition.
+      Il est généralement associé au numéro de suivi d'une expédition.
+  relationships:
+  - name: "member_of"
+    roles:
+    - concept: "Fulfillment"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Fulfillment/ShipmentId} is a member of {Fulfillment}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Catalog/Sku"
+  type: "ValueType"
+  description: |-
+    A Stock Keeping Unit (SKU) is an internal unique identifier for an article.
+    It is typically associated with an article's barcode, such as the EAN/GTIN.
+  iri: "http://entropy-data.com/ontologies/global/Catalog/Sku"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Stock Keeping Unit"
+    ed:label@de: "Lagerhaltungseinheit"
+    ed:label@fr: "Unité de gestion de stock"
+    ed:shared: true
+    ed:classification: "Internal"
+    ed:examples:
+    - "AC1212ME1"
+    ed:pattern: "^[A-Za-z0-9]{8,14}$"
+    ed:description@de: |-
+      Eine Stock Keeping Unit (SKU) ist eine interne eindeutige Kennung für einen Artikel.
+      Sie ist typischerweise mit dem Barcode eines Artikels verbunden, wie z. B. EAN/GTIN.
+    ed:description@fr: |-
+      Une unité de gestion de stock (SKU) est un identifiant interne unique pour un article.
+      Elle est généralement associée au code-barres d'un article, tel que l'EAN/GTIN.
+  relationships:
+  - name: "member_of"
+    roles:
+    - concept: "Catalog"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Catalog/Sku} is a member of {Catalog}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "B2B/VatId"
+  type: "ValueType"
+  description: "VAT identification number of a business, in EU VIES format. Required for reverse-charge invoices to B2B customers."
+  iri: "http://entropy-data.com/ontologies/global/B2B/VatId"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "VAT ID"
+    ed:label@de: "Umsatzsteuer-ID"
+    ed:label@fr: "Numéro de TVA"
+    ed:shared: true
+    ed:classification: "Restricted"
+    ed:examples:
+    - "DE123456789"
+    ed:pattern: "^[A-Z]{2}[A-Z0-9]{2,12}$"
+    ed:description@de: "Umsatzsteuer-Identifikationsnummer eines Unternehmens im EU-VIES-Format. Erforderlich für Rechnungen an B2B-Kunden im Reverse-Charge-Verfahren."
+    ed:description@fr: "Numéro d'identification à la TVA d'une entreprise, au format VIES UE. Requis pour les factures en autoliquidation aux clients B2B."
+  relationships:
+  - name: "member_of"
+    roles:
+    - concept: "B2B"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2B/VatId} is a member of {B2B}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Catalog/Article"
+  type: "EntityType"
+  description: "A specific orderable variant of a product, identified by its SKU (e.g. a given size and colour combination)."
+  iri: "http://entropy-data.com/ontologies/global/Catalog/Article"
+  identify_by:
+  - "stock_keeping_unit"
+  annotations:
+    ed:label: "Article"
+    ed:label@de: "Artikel"
+    ed:label@fr: "Article"
+    ed:description@de: "Eine spezifische bestellbare Variante eines Produkts, identifiziert durch ihre SKU (z. B. eine bestimmte Größen- und Farbkombination)."
+    ed:description@fr: "Une variante spécifique commandable d'un produit, identifiée par son SKU (p. ex. une combinaison donnée de taille et de couleur)."
+  relationships:
+  - name: "stock_keeping_unit"
+    roles:
+    - concept: "Catalog/Sku"
+    multiplicity: "OneToOne"
+    verbalizes:
+    - "{Catalog/Article} has {Catalog/Sku}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "gtin"
+    roles:
+    - concept: "Catalog/Article.Gtin"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Catalog/Article} has {Catalog/Article.Gtin}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "size"
+    roles:
+    - concept: "Catalog/Article.Size"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Catalog/Article} has {Catalog/Article.Size}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "color"
+    roles:
+    - concept: "Catalog/Article.Color"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Catalog/Article} has {Catalog/Article.Color}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "list_price"
+    roles:
+    - concept: "Catalog/Article.ListPrice"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Catalog/Article} has {Catalog/Article.ListPrice}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "variant_of"
+    description: "An article is one orderable variant of a product."
+    roles:
+    - concept: "Catalog/Product"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Catalog/Article} is a variant of {Catalog/Product}"
+    - "{Catalog/Product} is offered as {Catalog/Article}"
+  - name: "member_of"
+    roles:
+    - concept: "Catalog"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Catalog/Article} is a member of {Catalog}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "B2B/Customer"
+  type: "EntityType"
+  description: "A company or public institution that buys in the online shop for its business, on invoice and under negotiated payment terms."
+  iri: "http://entropy-data.com/ontologies/global/B2B/Customer"
+  identify_by:
+  - "account_number"
+  annotations:
+    ed:label: "B2B Customer"
+    ed:label@de: "B2B-Kunde"
+    ed:label@fr: "Client B2B"
+    ed:synonyms:
+    - "business customer"
+    - "business account"
+    - "corporate customer"
+    - "Geschäftskunde"
+    ed:description@de: "Ein Unternehmen oder eine öffentliche Einrichtung, das bzw. die im Online-Shop für den geschäftlichen Bedarf einkauft, auf Rechnung und zu vereinbarten Zahlungsbedingungen."
+    ed:description@fr: "Une entreprise ou un organisme public qui achète dans la boutique en ligne pour ses besoins professionnels, sur facture et selon des conditions de paiement négociées."
+  relationships:
+  - name: "account_number"
+    roles:
+    - concept: "B2B/Customer.AccountNumber"
+    multiplicity: "OneToOne"
+    verbalizes:
+    - "{B2B/Customer} has {B2B/Customer.AccountNumber}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "invoice_email"
+    roles:
+    - concept: "B2B/Customer.InvoiceEmail"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2B/Customer} has {B2B/Customer.InvoiceEmail}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "legal_name"
+    roles:
+    - concept: "B2B/Customer.LegalName"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2B/Customer} has {B2B/Customer.LegalName}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "vat_id"
+    roles:
+    - concept: "B2B/VatId"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2B/Customer} has {B2B/VatId}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "duns_number"
+    roles:
+    - concept: "B2B/Customer.DunsNumber"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2B/Customer} has {B2B/Customer.DunsNumber}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "industry_code"
+    roles:
+    - concept: "B2B/Customer.IndustryCode"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2B/Customer} has {B2B/Customer.IndustryCode}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "company_size"
+    roles:
+    - concept: "B2B/Customer.CompanySize"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2B/Customer} has {B2B/Customer.CompanySize}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "payment_terms"
+    roles:
+    - concept: "B2B/Customer.PaymentTerms"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2B/Customer} has {B2B/Customer.PaymentTerms}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "credit_limit"
+    roles:
+    - concept: "B2B/Customer.CreditLimit"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2B/Customer} has {B2B/Customer.CreditLimit}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "purchase_order_required"
+    roles:
+    - concept: "B2B/Customer.PurchaseOrderRequired"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2B/Customer} has {B2B/Customer.PurchaseOrderRequired}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "onboarded_at"
+    roles:
+    - concept: "B2B/Customer.OnboardedAt"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2B/Customer} has {B2B/Customer.OnboardedAt}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "subsidiary_of"
+    description: "A B2B customer can be a subsidiary of a parent company's account, so credit limits and reporting roll up to the corporate group."
+    roles:
+    - concept: "B2B/Customer"
+      name: "parent"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2B/Customer} subsidiary of {B2B/Customer}"
+  - name: "member_of"
+    roles:
+    - concept: "B2B"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2B/Customer} is a member of {B2B}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "B2C/Customer"
+  type: "EntityType"
+  description: "A natural person who buys in the online shop for private use, with a registered account or as a guest."
+  iri: "http://entropy-data.com/ontologies/global/B2C/Customer"
+  identify_by:
+  - "customer_id"
+  annotations:
+    ed:label: "B2C Customer"
+    ed:label@de: "B2C-Kunde"
+    ed:label@fr: "Client B2C"
+    ed:synonyms:
+    - "consumer"
+    - "private customer"
+    - "end customer"
+    - "Privatkunde"
+    ed:description@de: "Eine natürliche Person, die im Online-Shop für den privaten Gebrauch einkauft, mit registriertem Konto oder als Gast."
+    ed:description@fr: "Une personne physique qui achète dans la boutique en ligne pour un usage privé, avec un compte enregistré ou en tant qu'invité."
+  relationships:
+  - name: "customer_id"
+    roles:
+    - concept: "B2C/CustomerId"
+    multiplicity: "OneToOne"
+    verbalizes:
+    - "{B2C/Customer} has {B2C/CustomerId}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "customer_email"
+    roles:
+    - concept: "B2C/CustomerEmail"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2C/Customer} has {B2C/CustomerEmail}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "first_name"
+    roles:
+    - concept: "B2C/Customer.FirstName"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2C/Customer} has {B2C/Customer.FirstName}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "last_name"
+    roles:
+    - concept: "B2C/Customer.LastName"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2C/Customer} has {B2C/Customer.LastName}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "date_of_birth"
+    roles:
+    - concept: "B2C/Customer.DateOfBirth"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2C/Customer} has {B2C/Customer.DateOfBirth}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "gender"
+    roles:
+    - concept: "B2C/Customer.Gender"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2C/Customer} has {B2C/Customer.Gender}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "preferred_language"
+    roles:
+    - concept: "B2C/Customer.PreferredLanguage"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2C/Customer} has {B2C/Customer.PreferredLanguage}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "registered_at"
+    roles:
+    - concept: "B2C/Customer.RegisteredAt"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2C/Customer} has {B2C/Customer.RegisteredAt}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "account_status"
+    roles:
+    - concept: "B2C/Customer.AccountStatus"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2C/Customer} has {B2C/Customer.AccountStatus}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "customer_type"
+    roles:
+    - concept: "B2C/Customer.CustomerType"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2C/Customer} has {B2C/Customer.CustomerType}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "loyalty_tier"
+    roles:
+    - concept: "B2C/Customer.LoyaltyTier"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2C/Customer} has {B2C/Customer.LoyaltyTier}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "loyalty_points_balance"
+    roles:
+    - concept: "B2C/Customer.LoyaltyPointsBalance"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2C/Customer} has {B2C/Customer.LoyaltyPointsBalance}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "marketing_consent"
+    roles:
+    - concept: "B2C/Customer.MarketingConsent"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2C/Customer} has {B2C/Customer.MarketingConsent}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "last_login_at"
+    roles:
+    - concept: "B2C/Customer.LastLoginAt"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2C/Customer} has {B2C/Customer.LastLoginAt}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "member_of"
+    roles:
+    - concept: "B2C"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{B2C/Customer} is a member of {B2C}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Sales/BillingAddress"
+  type: "EntityType"
+  description: "A postal address used on the invoice for an order. Sub-type of Postal Address."
+  iri: "http://entropy-data.com/ontologies/global/Sales/BillingAddress"
+  extends:
+  - "Sales/PostalAddress"
+  annotations:
+    ed:label: "Billing Address"
+    ed:label@de: "Rechnungsadresse"
+    ed:label@fr: "Adresse de facturation"
+    ed:description@de: "Eine Postanschrift, die auf der Rechnung für eine Bestellung verwendet wird. Untertyp von Postal Address."
+    ed:description@fr: "Une adresse postale utilisée sur la facture d'une commande. Sous-type de Postal Address."
+  relationships:
+  - name: "vat_id"
+    roles:
+    - concept: "B2B/VatId"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/BillingAddress} has {B2B/VatId}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "company_name"
+    roles:
+    - concept: "Sales/BillingAddress.CompanyName"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/BillingAddress} has {Sales/BillingAddress.CompanyName}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "billing_address_of"
+    description: "A billing address belongs to one B2B customer, who may have several, for example one per cost centre."
+    roles:
+    - concept: "B2B/Customer"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/BillingAddress} is the billing address of {B2B/Customer}"
+    - "{B2B/Customer} is billed at {Sales/BillingAddress}"
+  - name: "member_of"
+    roles:
+    - concept: "Sales"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/BillingAddress} is a member of {Sales}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Sales/LineItem"
+  type: "EntityType"
+  description: "A single line within an order, referencing an article and the quantity purchased."
+  iri: "http://entropy-data.com/ontologies/global/Sales/LineItem"
+  identify_by:
+  - "order_id"
+  - "line_number"
+  annotations:
+    ed:label: "Line Item"
+    ed:label@de: "Bestellposition"
+    ed:label@fr: "Ligne de commande"
+    ed:description@de: "Eine einzelne Position innerhalb einer Bestellung, die auf einen Artikel und die gekaufte Menge verweist."
+    ed:description@fr: "Une ligne unique dans une commande, faisant référence à un article et à la quantité achetée."
+  relationships:
+  - name: "order_id"
+    roles:
+    - concept: "Sales/OrderId"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/LineItem} has {Sales/OrderId}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "line_number"
+    roles:
+    - concept: "Sales/LineItem.LineNumber"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/LineItem} has {Sales/LineItem.LineNumber}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "stock_keeping_unit"
+    roles:
+    - concept: "Catalog/Sku"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/LineItem} has {Catalog/Sku}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "quantity"
+    roles:
+    - concept: "Sales/LineItem.Quantity"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/LineItem} has {Sales/LineItem.Quantity}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "unit_price"
+    roles:
+    - concept: "Sales/LineItem.UnitPrice"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/LineItem} has {Sales/LineItem.UnitPrice}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "discount_amount"
+    roles:
+    - concept: "Sales/LineItem.DiscountAmount"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/LineItem} has {Sales/LineItem.DiscountAmount}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "tax_rate"
+    roles:
+    - concept: "Sales/LineItem.TaxRate"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/LineItem} has {Sales/LineItem.TaxRate}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "line_total"
+    roles:
+    - concept: "Sales/LineItem.LineTotal"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/LineItem} has {Sales/LineItem.LineTotal}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "part_of"
+    description: "A line item is part of exactly one order."
+    roles:
+    - concept: "Sales/Order"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/LineItem} is part of {Sales/Order}"
+    - "{Sales/Order} contains {Sales/LineItem}"
+  - name: "references"
+    description: "A line item references the article that was purchased."
+    roles:
+    - concept: "Catalog/Article"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/LineItem} references {Catalog/Article}"
+  - name: "member_of"
+    roles:
+    - concept: "Sales"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/LineItem} is a member of {Sales}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Sales/Order"
+  type: "EntityType"
+  description: "A confirmed purchase placed by a customer in the online shop. A cancelled order keeps its number."
+  iri: "http://entropy-data.com/ontologies/global/Sales/Order"
+  identify_by:
+  - "order_id"
+  annotations:
+    ed:label: "Order"
+    ed:label@de: "Bestellung"
+    ed:label@fr: "Commande"
+    ed:synonyms:
+    - "orders"
+    - "sales"
+    - "bestellungen"
+    ed:description@de: "Ein bestätigter Kauf, der von einem Kunden im Online-Shop aufgegeben wurde."
+    ed:description@fr: "Un achat confirmé effectué par un client dans la boutique en ligne."
+  relationships:
+  - name: "order_id"
+    roles:
+    - concept: "Sales/OrderId"
+    multiplicity: "OneToOne"
+    verbalizes:
+    - "{Sales/Order} has {Sales/OrderId}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "customer_id"
+    roles:
+    - concept: "B2C/CustomerId"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/Order} has {B2C/CustomerId}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "placed_at"
+    roles:
+    - concept: "Sales/Order.PlacedAt"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/Order} has {Sales/Order.PlacedAt}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "order_status"
+    roles:
+    - concept: "Sales/Order.OrderStatus"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/Order} has {Sales/Order.OrderStatus}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "total_amount"
+    roles:
+    - concept: "Sales/Order.TotalAmount"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/Order} has {Sales/Order.TotalAmount}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "currency"
+    roles:
+    - concept: "Sales/Order.Currency"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/Order} has {Sales/Order.Currency}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "bills_to"
+    description: "An order is billed to a customer's billing address."
+    roles:
+    - concept: "Sales/BillingAddress"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/Order} billed to {Sales/BillingAddress}"
+  - name: "placed_by_b2b_customer"
+    description: "An order placed by a B2B customer, typically referencing the customer's own purchase order number."
+    roles:
+    - concept: "B2B/Customer"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/Order} is placed by {B2B/Customer}"
+    - "{B2B/Customer} places {Sales/Order}"
+  - name: "placed_by_b2c_customer"
+    description: "An order placed by a B2C customer."
+    roles:
+    - concept: "B2C/Customer"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/Order} is placed by {B2C/Customer}"
+    - "{B2C/Customer} places {Sales/Order}"
+  - name: "ships_to"
+    description: "An order specifies the shipping address it should be delivered to."
+    roles:
+    - concept: "Sales/ShippingAddress"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/Order} ships to {Sales/ShippingAddress}"
+  - name: "member_of"
+    roles:
+    - concept: "Sales"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/Order} is a member of {Sales}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Sales/PostalAddress"
+  type: "EntityType"
+  description: "A postal address used for invoicing or delivery."
+  iri: "http://entropy-data.com/ontologies/global/Sales/PostalAddress"
+  annotations:
+    ed:label: "Postal Address"
+    ed:label@de: "Adresse"
+    ed:label@fr: "Adresse"
+    ed:description@de: "Eine Postanschrift, die für die Rechnungsstellung oder Lieferung verwendet wird."
+    ed:description@fr: "Une adresse postale utilisée pour la facturation ou la livraison."
+  relationships:
+  - name: "street"
+    roles:
+    - concept: "Sales/PostalAddress.Street"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/PostalAddress} has {Sales/PostalAddress.Street}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "postal_code"
+    roles:
+    - concept: "Sales/PostalAddress.PostalCode"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/PostalAddress} has {Sales/PostalAddress.PostalCode}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "city"
+    roles:
+    - concept: "Sales/PostalAddress.City"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/PostalAddress} has {Sales/PostalAddress.City}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "country"
+    roles:
+    - concept: "Sales/PostalAddress.Country"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/PostalAddress} has {Sales/PostalAddress.Country}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "member_of"
+    roles:
+    - concept: "Sales"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/PostalAddress} is a member of {Sales}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Catalog/Product"
+  type: "EntityType"
+  description: "An abstract catalog item grouping orderable variants (articles)."
+  iri: "http://entropy-data.com/ontologies/global/Catalog/Product"
+  identify_by:
+  - "product_id"
+  annotations:
+    ed:label: "Product"
+    ed:label@de: "Produkt"
+    ed:label@fr: "Produit"
+    ed:description@de: "Ein abstrakter Katalogeintrag, der bestellbare Varianten (Artikel) gruppiert."
+    ed:description@fr: "Un article de catalogue abstrait regroupant les variantes commandables (articles)."
+  relationships:
+  - name: "product_id"
+    roles:
+    - concept: "Catalog/Product.ProductId"
+    multiplicity: "OneToOne"
+    verbalizes:
+    - "{Catalog/Product} has {Catalog/Product.ProductId}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "title"
+    roles:
+    - concept: "Catalog/Product.Title"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Catalog/Product} has {Catalog/Product.Title}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "description"
+    roles:
+    - concept: "Catalog/Product.Description"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Catalog/Product} has {Catalog/Product.Description}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "brand"
+    roles:
+    - concept: "Catalog/Product.Brand"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Catalog/Product} has {Catalog/Product.Brand}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "category"
+    roles:
+    - concept: "Catalog/Product.Category"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Catalog/Product} has {Catalog/Product.Category}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "base_list_price"
+    roles:
+    - concept: "Catalog/Product.BaseListPrice"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Catalog/Product} has {Catalog/Product.BaseListPrice}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "member_of"
+    roles:
+    - concept: "Catalog"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Catalog/Product} is a member of {Catalog}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Fulfillment/Shipment"
+  type: "EntityType"
+  description: "A parcel dispatched to fulfill one or more order items."
+  iri: "http://entropy-data.com/ontologies/global/Fulfillment/Shipment"
+  identify_by:
+  - "shipment_id"
+  annotations:
+    ed:label: "Shipment"
+    ed:label@de: "Sendung"
+    ed:label@fr: "Expédition"
+    ed:description@de: "Ein Paket, das zur Erfüllung einer oder mehrerer Bestellpositionen versendet wird."
+    ed:description@fr: "Un colis expédié pour exécuter un ou plusieurs articles de commande."
+  relationships:
+  - name: "shipment_id"
+    roles:
+    - concept: "Fulfillment/ShipmentId"
+    multiplicity: "OneToOne"
+    verbalizes:
+    - "{Fulfillment/Shipment} has {Fulfillment/ShipmentId}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "order_id"
+    roles:
+    - concept: "Sales/OrderId"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Fulfillment/Shipment} has {Sales/OrderId}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "dispatched_at"
+    roles:
+    - concept: "Fulfillment/Shipment.DispatchedAt"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Fulfillment/Shipment} has {Fulfillment/Shipment.DispatchedAt}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "carrier"
+    roles:
+    - concept: "Fulfillment/Shipment.Carrier"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Fulfillment/Shipment} has {Fulfillment/Shipment.Carrier}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "tracking_url"
+    roles:
+    - concept: "Fulfillment/Shipment.TrackingUrl"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Fulfillment/Shipment} has {Fulfillment/Shipment.TrackingUrl}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "delivers_to"
+    description: "A shipment is delivered to a shipping address."
+    roles:
+    - concept: "Sales/ShippingAddress"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Fulfillment/Shipment} delivered to {Sales/ShippingAddress}"
+  - name: "fulfills"
+    description: "A shipment fulfills one order. An order may be fulfilled by several shipments."
+    roles:
+    - concept: "Sales/Order"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Fulfillment/Shipment} fulfills {Sales/Order}"
+    - "{Sales/Order} is fulfilled by {Fulfillment/Shipment}"
+  - name: "member_of"
+    roles:
+    - concept: "Fulfillment"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Fulfillment/Shipment} is a member of {Fulfillment}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Sales/ShippingAddress"
+  type: "EntityType"
+  description: "A postal address designated as the delivery destination for a shipment. Sub-type of Postal Address."
+  iri: "http://entropy-data.com/ontologies/global/Sales/ShippingAddress"
+  extends:
+  - "Sales/PostalAddress"
+  annotations:
+    ed:label: "Shipping Address"
+    ed:label@de: "Lieferadresse"
+    ed:label@fr: "Adresse de livraison"
+    ed:description@de: "Eine Postanschrift, die als Lieferziel einer Sendung festgelegt ist. Untertyp von Postal Address."
+    ed:description@fr: "Une adresse postale désignée comme destination de livraison d'une expédition. Sous-type de Postal Address."
+  relationships:
+  - name: "delivery_instructions"
+    roles:
+    - concept: "Sales/ShippingAddress.DeliveryInstructions"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/ShippingAddress} has {Sales/ShippingAddress.DeliveryInstructions}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "access_code"
+    roles:
+    - concept: "Sales/ShippingAddress.AccessCode"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/ShippingAddress} has {Sales/ShippingAddress.AccessCode}"
+    annotations:
+      ed:relationship_type: "hasProperty"
+  - name: "saved_by"
+    description: "A shipping address is saved by one registered B2C customer in their address book for checkout."
+    roles:
+    - concept: "B2C/Customer"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/ShippingAddress} is saved by {B2C/Customer}"
+    - "{B2C/Customer} saves {Sales/ShippingAddress}"
+  - name: "member_of"
+    roles:
+    - concept: "Sales"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/ShippingAddress} is a member of {Sales}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Sales/AverageOrderValue"
+  type: "ValueType"
+  description: |-
+    The typical amount a customer spends per order. A core commerce KPI used to
+    gauge pricing, bundling, and cross-sell effectiveness.
+  iri: "http://entropy-data.com/ontologies/global/Sales/AverageOrderValue"
+  annotations:
+    ed:label: "Average Order Value"
+    ed:label@de: "Durchschnittlicher Bestellwert"
+    ed:label@fr: "Valeur moyenne de commande"
+    ed:unit: "EUR"
+    ed:better_when: "higher"
+    ed:formula: "SUM(order.total_amount) / COUNT(DISTINCT order.id)"
+    ed:value_type: "MetricType"
+    ed:description@de: "Der typische Betrag, den ein Kunde pro Bestellung ausgibt. Eine zentrale Kennzahl für Preisgestaltung, Bundling und Cross-Selling."
+    ed:description@fr: "Le montant typique qu'un client dépense par commande. Un indicateur clé pour la tarification, le bundling et la vente croisée."
+  relationships:
+  - name: "derived_from"
+    description: "Average Order Value is derived from Gross Merchandise Value (divided by order count)."
+    roles:
+    - concept: "Controlling/Gmv"
+    verbalizes:
+    - "{Sales/AverageOrderValue} derived from {Controlling/Gmv}"
+    annotations:
+      ed:relationship_type: "derived_from"
+  - name: "measures"
+    description: "Average Order Value is measured on the Order entity."
+    roles:
+    - concept: "Sales/Order"
+    verbalizes:
+    - "{Sales/AverageOrderValue} measures {Sales/Order}"
+    annotations:
+      ed:relationship_type: "measures"
+  - name: "member_of"
+    roles:
+    - concept: "Sales"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/AverageOrderValue} is a member of {Sales}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Controlling/ContributionMargin1"
+  type: "ValueType"
+  description: |-
+    GMV minus Cost of Goods Sold (COGS). The first step in the contribution-margin
+    ladder. Shows what is left after paying for the products themselves.
+  iri: "http://entropy-data.com/ontologies/global/Controlling/ContributionMargin1"
+  annotations:
+    ed:label: "Contribution Margin 1"
+    ed:label@de: "Deckungsbeitrag 1"
+    ed:label@fr: "Marge de contribution 1"
+    ed:synonyms:
+    - "CM1"
+    ed:unit: "EUR"
+    ed:better_when: "higher"
+    ed:formula: "GMV - COGS"
+    ed:value_type: "MetricType"
+    ed:description@de: "Bruttowarenwert abzüglich Wareneinsatz (COGS). Die erste Stufe der Deckungsbeitragsrechnung. Zeigt, was nach den Warenkosten übrig bleibt."
+    ed:description@fr: "Valeur brute des marchandises moins le coût des marchandises vendues (COGS). Première étape de la marge de contribution. Ce qui reste après les coûts produits."
+  relationships:
+  - name: "derived_from"
+    description: "Contribution Margin 1 is GMV minus Cost of Goods Sold."
+    roles:
+    - concept: "Controlling/Gmv"
+    verbalizes:
+    - "{Controlling/ContributionMargin1} derived from {Controlling/Gmv}"
+    annotations:
+      ed:relationship_type: "derived_from"
+  - name: "measures"
+    description: "Contribution Margin 1 is measured per order."
+    roles:
+    - concept: "Sales/Order"
+    verbalizes:
+    - "{Controlling/ContributionMargin1} measures {Sales/Order}"
+    annotations:
+      ed:relationship_type: "measures"
+  - name: "member_of"
+    roles:
+    - concept: "Controlling"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Controlling/ContributionMargin1} is a member of {Controlling}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Controlling/ContributionMargin2"
+  type: "ValueType"
+  description: |-
+    CM1 minus variable fulfillment, payment, and marketing costs. Shows the margin
+    left after all directly attributable variable costs of the sale.
+  iri: "http://entropy-data.com/ontologies/global/Controlling/ContributionMargin2"
+  annotations:
+    ed:label: "Contribution Margin 2"
+    ed:label@de: "Deckungsbeitrag 2"
+    ed:label@fr: "Marge de contribution 2"
+    ed:synonyms:
+    - "CM2"
+    ed:unit: "EUR"
+    ed:better_when: "higher"
+    ed:formula: "CM1 - variable_fulfillment_costs - payment_costs - marketing_costs"
+    ed:value_type: "MetricType"
+    ed:description@de: "DB1 abzüglich variabler Fulfillment-, Zahlungs- und Marketingkosten. Zeigt die Marge nach allen direkt zurechenbaren variablen Kosten des Verkaufs."
+    ed:description@fr: "MC1 moins les coûts variables de logistique, de paiement et de marketing. Indique la marge après l'ensemble des coûts variables directement imputables à la vente."
+  relationships:
+  - name: "derived_from"
+    description: "Contribution Margin 2 is CM1 minus variable fulfillment, payment, and marketing costs."
+    roles:
+    - concept: "Controlling/ContributionMargin1"
+    verbalizes:
+    - "{Controlling/ContributionMargin2} derived from {Controlling/ContributionMargin1}"
+    annotations:
+      ed:relationship_type: "derived_from"
+  - name: "measures"
+    description: "Contribution Margin 2 is measured per order."
+    roles:
+    - concept: "Sales/Order"
+    verbalizes:
+    - "{Controlling/ContributionMargin2} measures {Sales/Order}"
+    annotations:
+      ed:relationship_type: "measures"
+  - name: "member_of"
+    roles:
+    - concept: "Controlling"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Controlling/ContributionMargin2} is a member of {Controlling}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Controlling/ContributionMargin3"
+  type: "ValueType"
+  description: |-
+    CM2 minus the impact of returns (refunded revenue and return-handling costs).
+    The most realistic view of per-order profitability for ecommerce businesses.
+  iri: "http://entropy-data.com/ontologies/global/Controlling/ContributionMargin3"
+  annotations:
+    ed:label: "Contribution Margin 3"
+    ed:label@de: "Deckungsbeitrag 3"
+    ed:label@fr: "Marge de contribution 3"
+    ed:synonyms:
+    - "CM3"
+    ed:unit: "EUR"
+    ed:better_when: "higher"
+    ed:formula: "CM2 - refunded_revenue - return_handling_costs"
+    ed:value_type: "MetricType"
+    ed:description@de: "DB2 abzüglich der Auswirkungen von Retouren (erstattete Umsätze und Retourenabwicklungskosten). Die realistischste Sicht auf die Profitabilität je Bestellung im E-Commerce."
+    ed:description@fr: "MC2 moins l'impact des retours (chiffre d'affaires remboursé et coûts de traitement des retours). La vision la plus réaliste de la rentabilité par commande en e-commerce."
+  relationships:
+  - name: "derived_from"
+    description: "Contribution Margin 3 is CM2 minus the impact of returns."
+    roles:
+    - concept: "Controlling/ContributionMargin2"
+    verbalizes:
+    - "{Controlling/ContributionMargin3} derived from {Controlling/ContributionMargin2}"
+    annotations:
+      ed:relationship_type: "derived_from"
+  - name: "measures"
+    description: "Contribution Margin 3 is measured per order."
+    roles:
+    - concept: "Sales/Order"
+    verbalizes:
+    - "{Controlling/ContributionMargin3} measures {Sales/Order}"
+    annotations:
+      ed:relationship_type: "measures"
+  - name: "member_of"
+    roles:
+    - concept: "Controlling"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Controlling/ContributionMargin3} is a member of {Controlling}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Sales/ConversionRate"
+  type: "ValueType"
+  description: |-
+    Share of website sessions that result in a completed order. The headline
+    funnel KPI for ecommerce. Higher is better.
+  iri: "http://entropy-data.com/ontologies/global/Sales/ConversionRate"
+  annotations:
+    ed:label: "Conversion Rate"
+    ed:label@de: "Konversionsrate"
+    ed:label@fr: "Taux de conversion"
+    ed:unit: "%"
+    ed:better_when: "higher"
+    ed:formula: "COUNT(order) / COUNT(session) * 100"
+    ed:value_type: "MetricType"
+    ed:description@de: "Anteil der Website-Sitzungen, die zu einer abgeschlossenen Bestellung führen. Die zentrale Funnel-Kennzahl im E-Commerce. Je höher, desto besser."
+    ed:description@fr: "Part des sessions du site qui aboutissent à une commande finalisée. L'indicateur clé du tunnel de conversion e-commerce. Plus c'est haut, mieux c'est."
+  relationships:
+  - name: "measures"
+    description: "Conversion Rate is measured against placed orders as the desired outcome."
+    roles:
+    - concept: "Sales/Order"
+    verbalizes:
+    - "{Sales/ConversionRate} measures {Sales/Order}"
+    annotations:
+      ed:relationship_type: "measures"
+  - name: "member_of"
+    roles:
+    - concept: "Sales"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Sales/ConversionRate} is a member of {Sales}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Controlling/Gmv"
+  type: "ValueType"
+  description: |-
+    Total value of all placed orders before refunds, returns, and discounts.
+    The headline ecommerce KPI, commonly abbreviated as GMV.
+  iri: "http://entropy-data.com/ontologies/global/Controlling/Gmv"
+  annotations:
+    ed:label: "Gross Merchandise Value"
+    ed:label@de: "Bruttowarenwert"
+    ed:label@fr: "Valeur brute des marchandises"
+    ed:synonyms:
+    - "GMV"
+    ed:unit: "EUR"
+    ed:better_when: "higher"
+    ed:formula: "SUM(order.total_amount)"
+    ed:value_type: "MetricType"
+    ed:description@de: "Gesamtwert aller aufgegebenen Bestellungen vor Rückerstattungen, Retouren und Rabatten. Die zentrale E-Commerce-Kennzahl, oft als GMV abgekürzt."
+    ed:description@fr: "Valeur totale de toutes les commandes passées avant remboursements, retours et remises. L'indicateur clé de l'e-commerce, souvent abrégé GMV."
+  relationships:
+  - name: "measures"
+    description: "Gross Merchandise Value is the aggregation of the order's total amount."
+    roles:
+    - concept: "Sales/Order.TotalAmount"
+    verbalizes:
+    - "{Controlling/Gmv} measures {Sales/Order.TotalAmount}"
+    annotations:
+      ed:relationship_type: "measures"
+  - name: "member_of"
+    roles:
+    - concept: "Controlling"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Controlling/Gmv} is a member of {Controlling}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Fulfillment/NoFindRate"
+  type: "ValueType"
+  description: |-
+    Share of warehouse pick tasks where the picker could not locate the item at
+    its expected storage location (out of stock, misplaced, damaged). A core
+    warehouse-quality KPI. Lower is better.
+  iri: "http://entropy-data.com/ontologies/global/Fulfillment/NoFindRate"
+  annotations:
+    ed:label: "No-Find Rate"
+    ed:label@de: "Nichtauffindungsquote"
+    ed:label@fr: "Taux d'introuvables"
+    ed:unit: "%"
+    ed:better_when: "lower"
+    ed:formula: "COUNT(pick_task WHERE status = 'not_found') / COUNT(pick_task) * 100"
+    ed:value_type: "MetricType"
+    ed:description@de: "Anteil der Kommissionier-Vorgänge im Lager, bei denen der Artikel am erwarteten Lagerplatz nicht gefunden werden konnte (vergriffen, falsch eingelagert, beschädigt). Eine zentrale Kennzahl für die Lagerqualität. Je niedriger, desto besser."
+    ed:description@fr: "Part des opérations de picking en entrepôt où l'article n'a pas pu être trouvé à son emplacement prévu (rupture, mal rangé, endommagé). Un indicateur clé de la qualité d'entrepôt. Plus c'est bas, mieux c'est."
+  relationships:
+  - name: "measures"
+    description: "No-Find Rate is measured per warehouse pick task (one per line item)."
+    roles:
+    - concept: "Sales/LineItem"
+    verbalizes:
+    - "{Fulfillment/NoFindRate} measures {Sales/LineItem}"
+    annotations:
+      ed:relationship_type: "measures"
+  - name: "member_of"
+    roles:
+    - concept: "Fulfillment"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Fulfillment/NoFindRate} is a member of {Fulfillment}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Fulfillment/OrderFulfillmentTime"
+  type: "ValueType"
+  description: |-
+    Average time between an order being placed and the first shipment leaving the
+    warehouse. A core fulfillment KPI. Lower is better.
+  iri: "http://entropy-data.com/ontologies/global/Fulfillment/OrderFulfillmentTime"
+  annotations:
+    ed:label: "Order Fulfillment Time"
+    ed:label@de: "Auftragsabwicklungszeit"
+    ed:label@fr: "Délai d'exécution des commandes"
+    ed:unit: "hours"
+    ed:better_when: "lower"
+    ed:formula: "AVG(shipment.dispatched_at - order.placed_at)"
+    ed:value_type: "MetricType"
+    ed:description@de: "Durchschnittliche Zeit zwischen Bestelleingang und Versand aus dem Lager. Eine zentrale Kennzahl für die Auftragsabwicklung. Je niedriger, desto besser."
+    ed:description@fr: "Temps moyen entre la passation d'une commande et l'expédition depuis l'entrepôt. Un indicateur clé de l'exécution. Plus c'est bas, mieux c'est."
+  relationships:
+  - name: "measures"
+    description: "Order Fulfillment Time is measured on the Shipment entity."
+    roles:
+    - concept: "Fulfillment/Shipment"
+    verbalizes:
+    - "{Fulfillment/OrderFulfillmentTime} measures {Fulfillment/Shipment}"
+    annotations:
+      ed:relationship_type: "measures"
+  - name: "member_of"
+    roles:
+    - concept: "Fulfillment"
+    multiplicity: "ManyToOne"
+    verbalizes:
+    - "{Fulfillment/OrderFulfillmentTime} is a member of {Fulfillment}"
+    annotations:
+      ed:relationship_type: "memberOf"
+- concept: "Sales/ShippingAddress.AccessCode"
+  type: "ValueType"
+  description: "Optional building or gate access code required for delivery."
+  iri: "http://entropy-data.com/ontologies/global/Sales/ShippingAddress.AccessCode"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Access Code"
+    ed:label@de: "Zugangscode"
+    ed:label@fr: "Code d'accès"
+    ed:classification: "Restricted"
+    ed:examples:
+    - "4711#"
+    ed:description@de: "Optionaler Gebäude- oder Torzugangscode, der für die Lieferung erforderlich ist."
+    ed:description@fr: "Code d'accès au bâtiment ou au portail requis pour la livraison (optionnel)."
+- concept: "B2B/Customer.AccountNumber"
+  type: "ValueType"
+  description: "The account number of a B2B customer, assigned when the business account is approved. Printed on every invoice."
+  iri: "http://entropy-data.com/ontologies/global/B2B/Customer.AccountNumber"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Account Number"
+    ed:label@de: "Kontonummer"
+    ed:label@fr: "Numéro de compte"
+    ed:classification: "Internal"
+    ed:examples:
+    - "B2B-004711"
+    ed:pattern: "^B2B-[0-9]{6}$"
+    ed:description@de: "Die Kontonummer eines B2B-Kunden, vergeben bei der Freischaltung des Geschäftskontos. Steht auf jeder Rechnung."
+    ed:description@fr: "Le numéro de compte d'un client B2B, attribué à l'approbation du compte professionnel. Figure sur chaque facture."
+- concept: "B2C/Customer.AccountStatus"
+  type: "ValueType"
+  description: "Lifecycle state of the customer account."
+  iri: "http://entropy-data.com/ontologies/global/B2C/Customer.AccountStatus"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Account Status"
+    ed:label@de: "Kontostatus"
+    ed:label@fr: "Statut du compte"
+    ed:examples:
+    - "active"
+    ed:enum:
+    - "active"
+    - "inactive"
+    - "suspended"
+    - "closed"
+    ed:description@de: "Lebenszyklusstatus des Kundenkontos."
+    ed:description@fr: "État du cycle de vie du compte client."
+- concept: "Catalog/Product.BaseListPrice"
+  type: "ValueType"
+  description: "Reference list price for the product before variant-specific adjustments."
+  iri: "http://entropy-data.com/ontologies/global/Catalog/Product.BaseListPrice"
+  extends:
+  - "Decimal"
+  annotations:
+    ed:label: "Base List Price"
+    ed:label@de: "Basislistenpreis"
+    ed:label@fr: "Prix catalogue de base"
+    ed:examples:
+    - "24.99"
+    ed:description@de: "Referenzlistenpreis für das Produkt vor variantenspezifischen Anpassungen."
+    ed:description@fr: "Prix catalogue de référence pour le produit avant ajustements spécifiques à la variante."
+- concept: "Catalog/Product.Brand"
+  type: "ValueType"
+  description: "Brand the product belongs to."
+  iri: "http://entropy-data.com/ontologies/global/Catalog/Product.Brand"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Brand"
+    ed:label@de: "Marke"
+    ed:label@fr: "Marque"
+    ed:examples:
+    - "EcoWear"
+    ed:description@de: "Marke, zu der das Produkt gehört."
+    ed:description@fr: "Marque à laquelle appartient le produit."
+- concept: "Fulfillment/Shipment.Carrier"
+  type: "ValueType"
+  description: "Logistics provider handling the shipment."
+  iri: "http://entropy-data.com/ontologies/global/Fulfillment/Shipment.Carrier"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Carrier"
+    ed:label@de: "Versanddienstleister"
+    ed:label@fr: "Transporteur"
+    ed:examples:
+    - "DHL"
+    - "UPS"
+    - "FedEx"
+    ed:description@de: "Logistikdienstleister, der die Sendung abwickelt."
+    ed:description@fr: "Prestataire logistique en charge de l'expédition."
+- concept: "Catalog/Product.Category"
+  type: "ValueType"
+  description: "Merchandising category the product is filed under."
+  iri: "http://entropy-data.com/ontologies/global/Catalog/Product.Category"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Category"
+    ed:label@de: "Kategorie"
+    ed:label@fr: "Catégorie"
+    ed:examples:
+    - "Apparel/T-Shirts"
+    - "Home/Kitchen"
+    ed:description@de: "Merchandising-Kategorie, unter der das Produkt eingeordnet ist."
+    ed:description@fr: "Catégorie de merchandising sous laquelle le produit est classé."
+- concept: "Sales/PostalAddress.City"
+  type: "ValueType"
+  description: "City or town of the address."
+  iri: "http://entropy-data.com/ontologies/global/Sales/PostalAddress.City"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "City"
+    ed:label@de: "Stadt"
+    ed:label@fr: "Ville"
+    ed:examples:
+    - "München"
+    ed:description@de: "Ort der Adresse."
+    ed:description@fr: "Ville de l'adresse."
+- concept: "Catalog/Article.Color"
+  type: "ValueType"
+  description: "Colour variant as shown on the storefront."
+  iri: "http://entropy-data.com/ontologies/global/Catalog/Article.Color"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Color"
+    ed:label@de: "Farbe"
+    ed:label@fr: "Couleur"
+    ed:examples:
+    - "red"
+    - "navy"
+    - "off-white"
+    ed:description@de: "Farbvariante, wie auf der Storefront angezeigt."
+    ed:description@fr: "Variante de couleur telle qu'affichée sur la boutique."
+- concept: "Sales/BillingAddress.CompanyName"
+  type: "ValueType"
+  description: "Company name printed on the invoice for orders by B2B customers. Usually the customer's legal name, optionally with a department or cost centre."
+  iri: "http://entropy-data.com/ontologies/global/Sales/BillingAddress.CompanyName"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Company Name"
+    ed:label@de: "Firmenname"
+    ed:label@fr: "Raison sociale"
+    ed:classification: "Restricted"
+    ed:examples:
+    - "Acme GmbH"
+    ed:description@de: "Firmenname, der auf der Rechnung für Bestellungen von B2B-Kunden erscheint. In der Regel die Firmierung des Kunden, optional mit Abteilung oder Kostenstelle."
+    ed:description@fr: "Nom de l'entreprise figurant sur la facture des commandes de clients B2B. Généralement la dénomination sociale du client, éventuellement complétée d'un service ou d'un centre de coûts."
+- concept: "B2B/Customer.CompanySize"
+  type: "ValueType"
+  description: "Size class of the company per the EU SME definition, based on headcount and annual turnover."
+  iri: "http://entropy-data.com/ontologies/global/B2B/Customer.CompanySize"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Company Size"
+    ed:label@de: "Unternehmensgröße"
+    ed:label@fr: "Taille de l'entreprise"
+    ed:examples:
+    - "medium"
+    ed:enum:
+    - "micro"
+    - "small"
+    - "medium"
+    - "large"
+    ed:description@de: "Größenklasse des Unternehmens nach der KMU-Definition der EU, basierend auf Mitarbeiterzahl und Jahresumsatz."
+    ed:description@fr: "Catégorie de taille de l'entreprise selon la définition européenne des PME, fondée sur l'effectif et le chiffre d'affaires annuel."
+- concept: "Sales/PostalAddress.Country"
+  type: "ValueType"
+  description: "ISO 3166-1 alpha-2 country code."
+  iri: "http://entropy-data.com/ontologies/global/Sales/PostalAddress.Country"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Country"
+    ed:label@de: "Land"
+    ed:label@fr: "Pays"
+    ed:examples:
+    - "DE"
+    - "FR"
+    ed:pattern: "^[A-Z]{2}$"
+    ed:description@de: "ISO 3166-1 alpha-2 Ländercode."
+    ed:description@fr: "Code pays ISO 3166-1 alpha-2."
+- concept: "B2B/Customer.CreditLimit"
+  type: "ValueType"
+  description: "Maximum open invoice amount in EUR the customer may carry before new orders are held for credit review."
+  iri: "http://entropy-data.com/ontologies/global/B2B/Customer.CreditLimit"
+  extends:
+  - "Decimal"
+  annotations:
+    ed:label: "Credit Limit"
+    ed:label@de: "Kreditlimit"
+    ed:label@fr: "Limite de crédit"
+    ed:classification: "Confidential"
+    ed:examples:
+    - "25000.00"
+    ed:description@de: "Maximaler Betrag offener Rechnungen in EUR, bevor neue Bestellungen zur Bonitätsprüfung angehalten werden."
+    ed:description@fr: "Montant maximal de factures ouvertes en EUR avant que les nouvelles commandes ne soient bloquées pour contrôle de crédit."
+- concept: "Sales/Order.Currency"
+  type: "ValueType"
+  description: "ISO 4217 currency code of the order total."
+  iri: "http://entropy-data.com/ontologies/global/Sales/Order.Currency"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Currency"
+    ed:label@de: "Währung"
+    ed:label@fr: "Devise"
+    ed:examples:
+    - "EUR"
+    - "USD"
+    ed:pattern: "^[A-Z]{3}$"
+    ed:description@de: "ISO 4217 Währungscode der Bestellsumme."
+    ed:description@fr: "Code de devise ISO 4217 du total de la commande."
+- concept: "B2C/Customer.CustomerType"
+  type: "ValueType"
+  description: "Whether the B2C customer shops as a guest or with a registered account."
+  iri: "http://entropy-data.com/ontologies/global/B2C/Customer.CustomerType"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Customer Type"
+    ed:label@de: "Kundentyp"
+    ed:label@fr: "Type de client"
+    ed:examples:
+    - "registered"
+    ed:enum:
+    - "guest"
+    - "registered"
+    ed:description@de: "Ob der B2C-Kunde als Gast oder mit einem registrierten Konto einkauft."
+    ed:description@fr: "Indique si le client B2C achète en tant qu'invité ou avec un compte enregistré."
+- concept: "B2C/Customer.DateOfBirth"
+  type: "ValueType"
+  description: "The customer's date of birth. Used for age verification on restricted articles."
+  iri: "http://entropy-data.com/ontologies/global/B2C/Customer.DateOfBirth"
+  extends:
+  - "Date"
+  annotations:
+    ed:label: "Date Of Birth"
+    ed:label@de: "Geburtsdatum"
+    ed:label@fr: "Date de naissance"
+    ed:classification: "Restricted"
+    ed:examples:
+    - "1987-05-14"
+    ed:description@de: "Das Geburtsdatum des Kunden. Wird zur Altersverifizierung bei altersbeschränkten Artikeln verwendet."
+    ed:description@fr: "La date de naissance du client. Utilisée pour la vérification de l'âge sur les articles à restriction d'âge."
+- concept: "Sales/ShippingAddress.DeliveryInstructions"
+  type: "ValueType"
+  description: "Free-text notes for the carrier (e.g. \"leave with neighbour\")."
+  iri: "http://entropy-data.com/ontologies/global/Sales/ShippingAddress.DeliveryInstructions"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Delivery Instructions"
+    ed:label@de: "Lieferhinweise"
+    ed:label@fr: "Instructions de livraison"
+    ed:classification: "Restricted"
+    ed:examples:
+    - "Leave with neighbour at no. 12"
+    ed:description@de: "Freitext-Hinweise für den Versanddienstleister (z. B. \"Bei Nachbarn abgeben\")."
+    ed:description@fr: "Notes en texte libre pour le transporteur (p. ex. « laisser chez le voisin »)."
+- concept: "Catalog/Product.Description"
+  type: "ValueType"
+  description: "Long-form marketing description shown on the product detail page."
+  iri: "http://entropy-data.com/ontologies/global/Catalog/Product.Description"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Description"
+    ed:label@de: "Beschreibung"
+    ed:label@fr: "Description"
+    ed:examples:
+    - "Soft, breathable 100% organic cotton tee with a relaxed fit."
+    ed:description@de: "Lange Marketingbeschreibung, die auf der Produktdetailseite angezeigt wird."
+    ed:description@fr: "Description marketing longue affichée sur la page de détail du produit."
+- concept: "Sales/LineItem.DiscountAmount"
+  type: "ValueType"
+  description: "Absolute discount applied to this line, in the order currency."
+  iri: "http://entropy-data.com/ontologies/global/Sales/LineItem.DiscountAmount"
+  extends:
+  - "Decimal"
+  annotations:
+    ed:label: "Discount Amount"
+    ed:label@de: "Rabattbetrag"
+    ed:label@fr: "Montant de la remise"
+    ed:examples:
+    - "5.00"
+    ed:description@de: "Absoluter Rabatt, der auf diese Position angewendet wird, in der Bestellwährung."
+    ed:description@fr: "Remise absolue appliquée à cette ligne, dans la devise de la commande."
+- concept: "Fulfillment/Shipment.DispatchedAt"
+  type: "ValueType"
+  description: "The timestamp when the shipment was handed over to the carrier."
+  iri: "http://entropy-data.com/ontologies/global/Fulfillment/Shipment.DispatchedAt"
+  extends:
+  - "DateTime"
+  annotations:
+    ed:label: "Dispatched At"
+    ed:label@de: "Versandzeitpunkt"
+    ed:label@fr: "Date d'expédition"
+    ed:examples:
+    - "2023-11-23T11:00:33Z"
+    ed:description@de: "Der Zeitstempel, zu dem die Sendung an den Versanddienstleister übergeben wurde."
+    ed:description@fr: "L'horodatage auquel l'expédition a été remise au transporteur."
+- concept: "B2B/Customer.DunsNumber"
+  type: "ValueType"
+  description: "Nine-digit D-U-N-S Number from Dun & Bradstreet. Used to match the company across systems and for credit checks."
+  iri: "http://entropy-data.com/ontologies/global/B2B/Customer.DunsNumber"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "DUNS Number"
+    ed:label@de: "D-U-N-S-Nummer"
+    ed:label@fr: "Numéro D-U-N-S"
+    ed:classification: "Internal"
+    ed:examples:
+    - "150483782"
+    ed:pattern: "^[0-9]{9}$"
+    ed:description@de: "Neunstellige D-U-N-S-Nummer von Dun & Bradstreet. Dient zum Abgleich des Unternehmens über Systeme hinweg und für Bonitätsprüfungen."
+    ed:description@fr: "Numéro D-U-N-S à neuf chiffres de Dun & Bradstreet. Sert à rapprocher l'entreprise entre les systèmes et aux contrôles de solvabilité."
+- concept: "B2C/Customer.FirstName"
+  type: "ValueType"
+  description: "Given name as provided at registration."
+  iri: "http://entropy-data.com/ontologies/global/B2C/Customer.FirstName"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "First Name"
+    ed:label@de: "Vorname"
+    ed:label@fr: "Prénom"
+    ed:classification: "Restricted"
+    ed:examples:
+    - "Anna"
+    - "John"
+    ed:description@de: "Vorname, wie bei der Registrierung angegeben."
+    ed:description@fr: "Prénom fourni lors de l'enregistrement."
+- concept: "B2C/Customer.Gender"
+  type: "ValueType"
+  description: "Self-declared gender. Optional at registration."
+  iri: "http://entropy-data.com/ontologies/global/B2C/Customer.Gender"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Gender"
+    ed:label@de: "Geschlecht"
+    ed:label@fr: "Genre"
+    ed:classification: "Restricted"
+    ed:examples:
+    - "female"
+    ed:enum:
+    - "female"
+    - "male"
+    - "diverse"
+    - "undisclosed"
+    ed:description@de: "Selbstangegebenes Geschlecht. Optional bei der Registrierung."
+    ed:description@fr: "Genre auto-déclaré. Facultatif lors de l'enregistrement."
+- concept: "Catalog/Article.Gtin"
+  type: "ValueType"
+  description: "Global Trade Item Number (EAN/UPC) encoded on the article's barcode."
+  iri: "http://entropy-data.com/ontologies/global/Catalog/Article.Gtin"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "GTIN"
+    ed:label@de: "GTIN"
+    ed:label@fr: "GTIN"
+    ed:examples:
+    - "4006381333931"
+    ed:pattern: "^[0-9]{8,14}$"
+    ed:description@de: "Global Trade Item Number (EAN/UPC), die auf dem Barcode des Artikels codiert ist."
+    ed:description@fr: "Global Trade Item Number (EAN/UPC) encodée sur le code-barres de l'article."
+- concept: "B2B/Customer.IndustryCode"
+  type: "ValueType"
+  description: "NACE Rev. 2 code of the company's main economic activity."
+  iri: "http://entropy-data.com/ontologies/global/B2B/Customer.IndustryCode"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Industry Code"
+    ed:label@de: "Branchencode"
+    ed:label@fr: "Code d'activité"
+    ed:examples:
+    - "47.91"
+    - "62.01"
+    ed:pattern: "^[0-9]{2}(\\.[0-9]{1,2})?$"
+    ed:description@de: "NACE-Rev.-2-Code der wirtschaftlichen Haupttätigkeit des Unternehmens."
+    ed:description@fr: "Code NACE Rév. 2 de l'activité économique principale de l'entreprise."
+- concept: "B2B/Customer.InvoiceEmail"
+  type: "ValueType"
+  description: "Email address of the customer's accounts payable department, where invoices and payment reminders are sent."
+  iri: "http://entropy-data.com/ontologies/global/B2B/Customer.InvoiceEmail"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Invoice Email"
+    ed:label@de: "Rechnungs-E-Mail"
+    ed:label@fr: "E-mail de facturation"
+    ed:classification: "Internal"
+    ed:examples:
+    - "invoices@acme.example"
+    ed:pattern: "^.*@.*$"
+    ed:description@de: "E-Mail-Adresse der Kreditorenbuchhaltung des Kunden, an die Rechnungen und Zahlungserinnerungen gehen."
+    ed:description@fr: "Adresse e-mail du service comptabilité fournisseurs du client, à laquelle sont envoyées les factures et les relances."
+- concept: "B2C/Customer.LastLoginAt"
+  type: "ValueType"
+  description: "Timestamp of the customer's most recent authenticated session."
+  iri: "http://entropy-data.com/ontologies/global/B2C/Customer.LastLoginAt"
+  extends:
+  - "DateTime"
+  annotations:
+    ed:label: "Last Login At"
+    ed:label@de: "Letzte Anmeldung"
+    ed:label@fr: "Dernière connexion"
+    ed:classification: "Internal"
+    ed:examples:
+    - "2024-09-12T18:42:07Z"
+    ed:description@de: "Zeitstempel der letzten authentifizierten Sitzung des Kunden."
+    ed:description@fr: "Horodatage de la dernière session authentifiée du client."
+- concept: "B2C/Customer.LastName"
+  type: "ValueType"
+  description: "Family name as provided at registration."
+  iri: "http://entropy-data.com/ontologies/global/B2C/Customer.LastName"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Last Name"
+    ed:label@de: "Nachname"
+    ed:label@fr: "Nom"
+    ed:classification: "Restricted"
+    ed:examples:
+    - "Schmidt"
+    - "Doe"
+    ed:description@de: "Nachname, wie bei der Registrierung angegeben."
+    ed:description@fr: "Nom de famille fourni lors de l'enregistrement."
+- concept: "B2B/Customer.LegalName"
+  type: "ValueType"
+  description: "Registered legal name of the company, including its legal form, as entered in the commercial register."
+  iri: "http://entropy-data.com/ontologies/global/B2B/Customer.LegalName"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Legal Name"
+    ed:label@de: "Firmierung"
+    ed:label@fr: "Dénomination sociale"
+    ed:classification: "Internal"
+    ed:examples:
+    - "Acme GmbH"
+    - "Globex Corporation"
+    ed:description@de: "Eingetragener rechtlicher Name des Unternehmens einschließlich Rechtsform, wie im Handelsregister vermerkt."
+    ed:description@fr: "Nom légal enregistré de l'entreprise, forme juridique comprise, tel qu'inscrit au registre du commerce."
+- concept: "Sales/LineItem.LineNumber"
+  type: "ValueType"
+  description: "Position of the line item within the order, starting at 1."
+  iri: "http://entropy-data.com/ontologies/global/Sales/LineItem.LineNumber"
+  extends:
+  - "Integer"
+  annotations:
+    ed:label: "Line Number"
+    ed:label@de: "Positionsnummer"
+    ed:label@fr: "Numéro de ligne"
+    ed:examples:
+    - "1"
+    - "2"
+    ed:description@de: "Position der Bestellposition innerhalb der Bestellung, beginnend bei 1."
+    ed:description@fr: "Position de la ligne de commande dans la commande, à partir de 1."
+- concept: "Sales/LineItem.LineTotal"
+  type: "ValueType"
+  description: "Net total for this line after discount, excluding shipping (quantity * unit_price - discount_amount)."
+  iri: "http://entropy-data.com/ontologies/global/Sales/LineItem.LineTotal"
+  extends:
+  - "Decimal"
+  annotations:
+    ed:label: "Line Total"
+    ed:label@de: "Positionssumme"
+    ed:label@fr: "Total de la ligne"
+    ed:examples:
+    - "54.98"
+    ed:description@de: "Nettosumme dieser Position nach Rabatt, ohne Versand (Menge × Einzelpreis − Rabatt)."
+    ed:description@fr: "Total net de cette ligne après remise, hors frais de port (quantité × prix unitaire − remise)."
+- concept: "Catalog/Article.ListPrice"
+  type: "ValueType"
+  description: "Variant-specific list price before discounts."
+  iri: "http://entropy-data.com/ontologies/global/Catalog/Article.ListPrice"
+  extends:
+  - "Decimal"
+  annotations:
+    ed:label: "List Price"
+    ed:label@de: "Listenpreis"
+    ed:label@fr: "Prix catalogue"
+    ed:examples:
+    - "26.99"
+    ed:description@de: "Variantenspezifischer Listenpreis vor Rabatten."
+    ed:description@fr: "Prix catalogue spécifique à la variante avant remises."
+- concept: "B2C/Customer.LoyaltyPointsBalance"
+  type: "ValueType"
+  description: "Current redeemable loyalty points balance."
+  iri: "http://entropy-data.com/ontologies/global/B2C/Customer.LoyaltyPointsBalance"
+  extends:
+  - "Integer"
+  annotations:
+    ed:label: "Loyalty Points Balance"
+    ed:label@de: "Treuepunkte-Saldo"
+    ed:label@fr: "Solde de points de fidélité"
+    ed:classification: "Internal"
+    ed:examples:
+    - "1250"
+    ed:description@de: "Aktuelles einlösbares Treuepunkte-Guthaben."
+    ed:description@fr: "Solde actuel de points de fidélité échangeables."
+- concept: "B2C/Customer.LoyaltyTier"
+  type: "ValueType"
+  description: "Loyalty program segment assigned based on rolling 12-month spend."
+  iri: "http://entropy-data.com/ontologies/global/B2C/Customer.LoyaltyTier"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Loyalty Tier"
+    ed:label@de: "Treuestufe"
+    ed:label@fr: "Niveau de fidélité"
+    ed:classification: "Internal"
+    ed:examples:
+    - "gold"
+    ed:enum:
+    - "none"
+    - "bronze"
+    - "silver"
+    - "gold"
+    - "platinum"
+    ed:description@de: "Segment des Treueprogramms, basierend auf den Ausgaben der rollierenden letzten 12 Monate."
+    ed:description@fr: "Segment du programme de fidélité attribué en fonction des dépenses sur 12 mois glissants."
+- concept: "B2C/Customer.MarketingConsent"
+  type: "ValueType"
+  description: "Whether the customer has opted in to marketing communications (GDPR Art. 6(1)(a))."
+  iri: "http://entropy-data.com/ontologies/global/B2C/Customer.MarketingConsent"
+  extends:
+  - "Boolean"
+  annotations:
+    ed:label: "Marketing Consent"
+    ed:label@de: "Marketing-Einwilligung"
+    ed:label@fr: "Consentement marketing"
+    ed:classification: "Restricted"
+    ed:examples:
+    - "true"
+    ed:description@de: "Ob der Kunde Marketingkommunikation zugestimmt hat (DSGVO Art. 6 Abs. 1 lit. a)."
+    ed:description@fr: "Indique si le client a consenti aux communications marketing (RGPD Art. 6(1)(a))."
+- concept: "B2B/Customer.OnboardedAt"
+  type: "ValueType"
+  description: "Timestamp when the business account was approved after the company verification (KYB) check."
+  iri: "http://entropy-data.com/ontologies/global/B2B/Customer.OnboardedAt"
+  extends:
+  - "DateTime"
+  annotations:
+    ed:label: "Onboarded At"
+    ed:label@de: "Freischaltungszeitpunkt"
+    ed:label@fr: "Date d'activation"
+    ed:examples:
+    - "2023-02-06T14:05:12Z"
+    ed:description@de: "Zeitstempel, zu dem das Geschäftskonto nach der Unternehmensprüfung (KYB) freigeschaltet wurde."
+    ed:description@fr: "Horodatage d'approbation du compte professionnel après la vérification de l'entreprise (KYB)."
+- concept: "Sales/Order.OrderStatus"
+  type: "ValueType"
+  description: "Lifecycle state of the order."
+  iri: "http://entropy-data.com/ontologies/global/Sales/Order.OrderStatus"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Order Status"
+    ed:label@de: "Bestellstatus"
+    ed:label@fr: "Statut de la commande"
+    ed:examples:
+    - "delivered"
+    ed:enum:
+    - "pending"
+    - "confirmed"
+    - "shipped"
+    - "delivered"
+    - "cancelled"
+    - "returned"
+    ed:description@de: "Lebenszyklusstatus der Bestellung."
+    ed:description@fr: "État du cycle de vie de la commande."
+- concept: "B2B/Customer.PaymentTerms"
+  type: "ValueType"
+  description: "Agreed payment terms for invoices, either prepayment or payment due within the given number of days."
+  iri: "http://entropy-data.com/ontologies/global/B2B/Customer.PaymentTerms"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Payment Terms"
+    ed:label@de: "Zahlungsbedingungen"
+    ed:label@fr: "Conditions de paiement"
+    ed:classification: "Internal"
+    ed:examples:
+    - "net_30"
+    ed:enum:
+    - "prepayment"
+    - "net_14"
+    - "net_30"
+    - "net_60"
+    ed:description@de: "Vereinbarte Zahlungsbedingungen für Rechnungen, entweder Vorkasse oder Zahlung innerhalb der angegebenen Anzahl von Tagen."
+    ed:description@fr: "Conditions de paiement convenues pour les factures, soit un prépaiement, soit un paiement dans le nombre de jours indiqué."
+- concept: "Sales/Order.PlacedAt"
+  type: "ValueType"
+  description: "The timestamp when the order was placed."
+  iri: "http://entropy-data.com/ontologies/global/Sales/Order.PlacedAt"
+  extends:
+  - "DateTime"
+  annotations:
+    ed:label: "Placed At"
+    ed:label@de: "Bestellzeitpunkt"
+    ed:label@fr: "Date de commande"
+    ed:examples:
+    - "2023-11-23T11:00:33Z"
+    ed:description@de: "Der Zeitstempel, zu dem die Bestellung aufgegeben wurde."
+    ed:description@fr: "L'horodatage auquel la commande a été passée."
+- concept: "Sales/PostalAddress.PostalCode"
+  type: "ValueType"
+  description: "Postal code of the address."
+  iri: "http://entropy-data.com/ontologies/global/Sales/PostalAddress.PostalCode"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Postal Code"
+    ed:label@de: "Postleitzahl"
+    ed:label@fr: "Code postal"
+    ed:classification: "Restricted"
+    ed:examples:
+    - "80331"
+    ed:description@de: "Postleitzahl der Adresse."
+    ed:description@fr: "Code postal de l'adresse."
+- concept: "B2C/Customer.PreferredLanguage"
+  type: "ValueType"
+  description: "IETF BCP 47 language tag used for communications and storefront localization."
+  iri: "http://entropy-data.com/ontologies/global/B2C/Customer.PreferredLanguage"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Preferred Language"
+    ed:label@de: "Bevorzugte Sprache"
+    ed:label@fr: "Langue préférée"
+    ed:examples:
+    - "en-US"
+    - "de-DE"
+    ed:pattern: "^[a-z]{2}(-[A-Z]{2})?$"
+    ed:description@de: "IETF BCP 47 Sprachkennzeichen für Kommunikation und Storefront-Lokalisierung."
+    ed:description@fr: "Étiquette de langue IETF BCP 47 utilisée pour les communications et la localisation de la boutique."
+- concept: "Catalog/Product.ProductId"
+  type: "ValueType"
+  description: "Internal unique identifier for the catalog product."
+  iri: "http://entropy-data.com/ontologies/global/Catalog/Product.ProductId"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Product ID"
+    ed:label@de: "Produkt-ID"
+    ed:label@fr: "ID du produit"
+    ed:classification: "Internal"
+    ed:examples:
+    - "P-10042"
+    ed:description@de: "Interne eindeutige Kennung für das Katalogprodukt."
+    ed:description@fr: "Identifiant interne unique du produit catalogue."
+- concept: "B2B/Customer.PurchaseOrderRequired"
+  type: "ValueType"
+  description: "Whether every order must carry the customer's purchase order number, which is then printed on the invoice."
+  iri: "http://entropy-data.com/ontologies/global/B2B/Customer.PurchaseOrderRequired"
+  extends:
+  - "Boolean"
+  annotations:
+    ed:label: "Purchase Order Required"
+    ed:label@de: "Bestellnummer erforderlich"
+    ed:label@fr: "Bon de commande obligatoire"
+    ed:examples:
+    - "true"
+    ed:description@de: "Ob jede Bestellung die Bestellnummer des Kunden tragen muss, die dann auf der Rechnung erscheint."
+    ed:description@fr: "Indique si chaque commande doit porter le numéro de bon de commande du client, qui figure ensuite sur la facture."
+- concept: "Sales/LineItem.Quantity"
+  type: "ValueType"
+  description: "Number of units of the article purchased in this line."
+  iri: "http://entropy-data.com/ontologies/global/Sales/LineItem.Quantity"
+  extends:
+  - "Integer"
+  annotations:
+    ed:label: "Quantity"
+    ed:label@de: "Menge"
+    ed:label@fr: "Quantité"
+    ed:examples:
+    - "2"
+    ed:description@de: "Anzahl der in dieser Position gekauften Einheiten des Artikels."
+    ed:description@fr: "Nombre d'unités de l'article achetées sur cette ligne."
+- concept: "B2C/Customer.RegisteredAt"
+  type: "ValueType"
+  description: "Timestamp when the customer account was created."
+  iri: "http://entropy-data.com/ontologies/global/B2C/Customer.RegisteredAt"
+  extends:
+  - "DateTime"
+  annotations:
+    ed:label: "Registered At"
+    ed:label@de: "Registrierungsdatum"
+    ed:label@fr: "Date d'enregistrement"
+    ed:examples:
+    - "2022-03-17T09:21:44Z"
+    ed:description@de: "Zeitstempel, zu dem das Kundenkonto erstellt wurde."
+    ed:description@fr: "Horodatage de création du compte client."
+- concept: "Catalog/Article.Size"
+  type: "ValueType"
+  description: "Size variant, using the sizing system appropriate to the product category."
+  iri: "http://entropy-data.com/ontologies/global/Catalog/Article.Size"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Size"
+    ed:label@de: "Größe"
+    ed:label@fr: "Taille"
+    ed:examples:
+    - "S"
+    - "M"
+    - "L"
+    - "42"
+    ed:description@de: "Größenvariante unter Verwendung des für die Produktkategorie passenden Größensystems."
+    ed:description@fr: "Variante de taille, utilisant le système de tailles adapté à la catégorie de produit."
+- concept: "Sales/PostalAddress.Street"
+  type: "ValueType"
+  description: "Street name and house number."
+  iri: "http://entropy-data.com/ontologies/global/Sales/PostalAddress.Street"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Street"
+    ed:label@de: "Straße"
+    ed:label@fr: "Rue"
+    ed:classification: "Restricted"
+    ed:examples:
+    - "Marienplatz 8"
+    ed:description@de: "Straße und Hausnummer."
+    ed:description@fr: "Rue et numéro."
+- concept: "Sales/LineItem.TaxRate"
+  type: "ValueType"
+  description: "Applicable VAT/sales tax rate as a decimal fraction (e.g. 0.19 for 19%)."
+  iri: "http://entropy-data.com/ontologies/global/Sales/LineItem.TaxRate"
+  extends:
+  - "Decimal"
+  annotations:
+    ed:label: "Tax Rate"
+    ed:label@de: "Steuersatz"
+    ed:label@fr: "Taux de TVA"
+    ed:examples:
+    - "0.19"
+    ed:description@de: "Geltender Umsatzsteuersatz als Dezimalbruch (z. B. 0,19 für 19 %)."
+    ed:description@fr: "Taux de TVA applicable sous forme de fraction décimale (p. ex. 0,19 pour 19 %)."
+- concept: "Catalog/Product.Title"
+  type: "ValueType"
+  description: "Display name of the product."
+  iri: "http://entropy-data.com/ontologies/global/Catalog/Product.Title"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Title"
+    ed:label@de: "Titel"
+    ed:label@fr: "Titre"
+    ed:examples:
+    - "Organic Cotton T-Shirt"
+    ed:description@de: "Anzeigename des Produkts."
+    ed:description@fr: "Nom d'affichage du produit."
+- concept: "Sales/Order.TotalAmount"
+  type: "ValueType"
+  description: "Order total in the customer's transaction currency, net of VAT."
+  iri: "http://entropy-data.com/ontologies/global/Sales/Order.TotalAmount"
+  extends:
+  - "Decimal"
+  annotations:
+    ed:label: "Total Amount"
+    ed:label@de: "Gesamtbetrag"
+    ed:label@fr: "Montant total"
+    ed:examples:
+    - "149.90"
+    ed:description@de: "Bestellsumme in der Transaktionswährung des Kunden."
+    ed:description@fr: "Total de la commande dans la devise de transaction du client."
+- concept: "Fulfillment/Shipment.TrackingUrl"
+  type: "ValueType"
+  description: "Public tracking link provided by the carrier."
+  iri: "http://entropy-data.com/ontologies/global/Fulfillment/Shipment.TrackingUrl"
+  extends:
+  - "String"
+  annotations:
+    ed:label: "Tracking URL"
+    ed:label@de: "Tracking-URL"
+    ed:label@fr: "URL de suivi"
+    ed:examples:
+    - "https://track.dhl.com/?tracking-id=00340434292135100186"
+    ed:description@de: "Öffentlicher Tracking-Link, der vom Versanddienstleister bereitgestellt wird."
+    ed:description@fr: "Lien de suivi public fourni par le transporteur."
+- concept: "Sales/LineItem.UnitPrice"
+  type: "ValueType"
+  description: "Price per unit at the time of purchase, in the order currency."
+  iri: "http://entropy-data.com/ontologies/global/Sales/LineItem.UnitPrice"
+  extends:
+  - "Decimal"
+  annotations:
+    ed:label: "Unit Price"
+    ed:label@de: "Einzelpreis"
+    ed:label@fr: "Prix unitaire"
+    ed:examples:
+    - "29.99"
+    ed:description@de: "Preis pro Einheit zum Zeitpunkt des Kaufs, in der Bestellwährung."
+    ed:description@fr: "Prix par unité au moment de l'achat, dans la devise de la commande."
